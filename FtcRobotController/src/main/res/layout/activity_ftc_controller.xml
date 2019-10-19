@@ -32,33 +32,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:style="http://schemas.android.com/apk/res-auto"
-              tools:context="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
-              android:focusable="true"
-              android:id="@+id/entire_screen"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:style="http://schemas.android.com/apk/res-auto"
+    xmlns:opencv="http://schemas.android.com/apk/res-auto"
+    tools:context="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
+    android:focusable="true"
+    android:id="@+id/entire_screen"
+    android:orientation="vertical">
 
   <!-- black bar on top -->
   <RelativeLayout
     android:id="@+id/top_bar"
     android:layout_width="fill_parent"
     android:layout_height="80dp"
-    android:background="@color/background_black">
+    android:background="#000000">
 
     <ImageView
-      android:id="@+id/robotIcon"
-      android:src="@drawable/icon_robotcontroller"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent"
-      android:adjustViewBounds="true"
-      android:layout_margin="1dp"/>
+        android:id="@+id/middleIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/yes3" />
 
     <TextView
       android:id="@+id/textDeviceName"
-      android:layout_toEndOf="@id/robotIcon"
+      android:layout_toEndOf="@id/middleIcon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textColor="?attr/textWhite"
@@ -71,14 +75,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:scaleType="fitXY"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:src="@drawable/icon_menu"
+      android:src="@drawable/yes2"
       android:background="@android:color/transparent"
-      android:padding="15dp"
+      android:padding="1dp"
       android:adjustViewBounds="true"
       android:layout_alignParentEnd="true"
       android:layout_centerInParent="true"
       android:layout_centerHorizontal="true"
-      android:layout_margin="10dp"/>
+      android:visibility="visible"
+      android:layout_margin="0dp"/>
 
   </RelativeLayout>
   <!-- end of black bar -->
@@ -147,6 +152,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_weight="1"
             />
 
+        <LinearLayout
+            android:id="@+id/cameraMonitorViewId2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            />
+        <FrameLayout
+            android:id="@+id/tfodMonitorViewId2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
         </LinearLayout>
 
       <!-- When visible, the error message will overlay and thus partially
@@ -192,6 +213,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:textStyle="bold"
       android:visibility="invisible"
       android:text="" />
+
+    <ImageView
+        android:id="@+id/bacon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="1dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="100dp"
+        android:adjustViewBounds="true"
+        android:visibility="visible"
+        android:src="@drawable/mark" />
+
 
   </RelativeLayout>
 
