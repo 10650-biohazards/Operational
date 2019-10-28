@@ -1,11 +1,13 @@
 package practice_meet_arnold;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "Arnold")
+@Disabled
 public class Arnold_Tele_Demo extends OpMode {
     Arnold_Hardware h = new Arnold_Hardware();
 

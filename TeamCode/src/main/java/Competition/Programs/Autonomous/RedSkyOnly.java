@@ -35,6 +35,27 @@ public class RedSkyOnly extends ExplosiveAuto {
 
     @Override
     public void initAction() {
+
+        int skyPos = vision.grabSkyPos();
+
+        drive.moveStraightPID(200);
+
+        if (skyPos == 0) {
+            drive.moveTurnPID(10);
+            drive.moveStraightPID(1000);
+            drive.moveTurnPID(-5);
+            drive.swingTurnPID(90, false);
+        } else if (skyPos == 1) {
+            drive.moveTurnPID(-10);
+            drive.moveStraightPID(1000);
+            drive.moveTurnPID(5);
+            drive.swingTurnPID(90, true);
+        } else {
+            drive.moveStraightPID(1000);
+            drive.swingTurnPID(90, true);
+        }
+
+        /*
         int skyPos = vision.grabSkyPos();
 
         drive.moveStraightPID(200);
@@ -59,7 +80,7 @@ public class RedSkyOnly extends ExplosiveAuto {
             curve.move(drive.track.getCurrentNode(), new Node(-2.2, -1, 0));
         }
         curve.move(drive.track.getCurrentNode(), new Node(0.5, -1.5, 90));
-        drive.moveStraightPID(-500);
+        drive.moveStraightPID(-500);*/
     }
 
     @Override

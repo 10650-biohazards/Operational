@@ -89,31 +89,26 @@ public class DriveSubsystem extends BioSubsystem {
     }
     public void moveStraightPID(double targDist) {moveStraightPID(targDist, 3000);}
 
-    public void moveRangePID(double targDist, int stopTime, boolean front) {
+    public void moveRangePID(double targDist, int stopTime, ModernRoboticsI2cRangeSensor range) {
         PID movePID = new PID();
         PID modPID = new PID();
 
-        double target = bright.getCurrentPosition() - targDist;
-        double targAng = refine(gyro.getYaw());
+        double target = targDist;
 
         movePID.setup(0.00625, 0, 0, 0.2, 20, target);
-        //modPID.setup(0.02, 0, 0, 0, 0, targAng);
 
         u.startTimer(stopTime);
 
         while (!u.timerDone() && !movePID.done()) {
 
-            //double mod = modPID.status(refine(gyro.getYaw()));
-            double mod = 0;
-            double power = -movePID.status(frontRange.getDistance(DistanceUnit.INCH));
+            double power = -movePID.status(range.getDistance(DistanceUnit.INCH));
 
             op.telemetry.addData("POWER", power);
-            op.telemetry.addData("Dist", frontRange.getDistance(DistanceUnit.INCH));
+            op.telemetry.addData("Dist", range.getDistance(DistanceUnit.INCH));
             op.telemetry.addData("Target", target);
-            op.telemetry.addData("TargAng", targAng);
             op.telemetry.update();
 
-            setPows(power - mod, power - mod, power + mod, power + mod);
+            setPows(power, power, power, power);
 
             track.refresh();
 

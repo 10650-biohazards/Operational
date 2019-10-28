@@ -1,5 +1,6 @@
 package Gagarin;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import FtcExplosivesPackage.ExplosiveTele;
@@ -10,6 +11,7 @@ import Gagarin.Commands.LiftCommand;
 import Gagarin.Commands.MarkerCommand;
 
 @TeleOp(name = "Gagarin Demo")
+@Disabled
 public class demoTeleOp extends ExplosiveTele {
 
     public GagarinRobot robot;

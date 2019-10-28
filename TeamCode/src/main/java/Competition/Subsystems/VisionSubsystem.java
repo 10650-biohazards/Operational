@@ -8,9 +8,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-import Competition.VisionPipelines.SkystonePipeline;
-import Competition.VisionPipelines.StackPipeline;
 import FtcExplosivesPackage.Subsystem;
+import VisionPipelines.SkystonePipeline;
 
 public class VisionSubsystem extends Subsystem {
 
