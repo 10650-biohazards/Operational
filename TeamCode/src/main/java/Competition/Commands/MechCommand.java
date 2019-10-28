@@ -84,10 +84,9 @@ public class MechCommand extends BioCommand {
 
         cairrage();
         //intake();
-        if (driver.a) {
-            // autoStack();
-        }
         hooker();
+
+        intake();
 
         adjTargLevel();
         moveLift();
@@ -130,6 +129,9 @@ public class MechCommand extends BioCommand {
 
     public void intake() {
 
+        intLeft.setPower(manip.right_stick_y );
+        intRight.setPower(manip.right_stick_y);
+
         /*if (VisionCommand.status == NONE) {
             Log.e(TAG, "No stone in sight");
             intLeft.setPower(0);
@@ -153,7 +155,7 @@ public class MechCommand extends BioCommand {
     }
 
     public void hooker() {
-        if (manip.y) {
+        if (manip.left_trigger > 0.5) {
             hooker.setPosition(0.5);
         } else {
             hooker.setPosition(1);

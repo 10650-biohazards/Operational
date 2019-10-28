@@ -13,8 +13,8 @@ import FtcExplosivesPackage.BiohazardTele;
 public class BasicTele extends BiohazardTele {
 
     DriveCommand drive;
-    VisionCommand vision;
     MechCommand mech;
+    VisionCommand vision;
 
     @Override
     public void initHardware() {
@@ -23,12 +23,12 @@ public class BasicTele extends BiohazardTele {
         robot.enable();
 
         drive = new DriveCommand(this);
-        vision = new VisionCommand(this, hardwareMap);
         mech = new MechCommand(this);
+        vision = new VisionCommand(this, hardwareMap);
 
         drive.enable();
-        vision.enable();
         mech.enable();
+        vision.enable();
     }
 
     @Override

@@ -31,6 +31,8 @@ public class RobotMap {
         intLeft = hw.get(DcMotor.class, "intLeft");
         intRight = hw.get(DcMotor.class, "intRight");
 
+        intRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
         gyro = new BiohazardNavX(hw, "navX", 0);
 
         stoneCam = hw.get(WebcamName.class, "stoned cam");

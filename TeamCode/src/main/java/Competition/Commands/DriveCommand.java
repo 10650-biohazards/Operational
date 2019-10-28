@@ -1,7 +1,11 @@
 package Competition.Commands;
 
+import android.media.MediaPlayer;
+import com.qualcomm.ftcrobotcontroller.R;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import Competition.Robot;
 import Competition.RobotMap;
@@ -28,6 +32,8 @@ public class DriveCommand extends BioCommand {
     boolean first = true;
 
     double startTime;
+
+    HardwareMap hw;
 
 
     BiohazardTele op;
@@ -75,6 +81,8 @@ public class DriveCommand extends BioCommand {
         gyro = RobotMap.gyro;
 
         driver = Robot.driver;
+
+
     }
 
     @Override
@@ -95,88 +103,42 @@ public class DriveCommand extends BioCommand {
             first = true;
         }
 
+        buffer = System.currentTimeMillis() > resetTime + 200;
 
+        FieldOrientedControl();
 
-            buffer = System.currentTimeMillis() > resetTime + 200;
+        SlowPower();
 
-            if (isFieldOrientedControl) {
-                ToxinFieldBasedControl.Point leftStick = ToxinFieldBasedControl.getLeftJoystick(driver, gyro);
-                sidePower = -(float) leftStick.x;
-                straightPower = -(float) leftStick.y;
-                turnPower = -driver.right_stick_x;
-            } else {
-                sidePower = -driver.left_stick_x;
-                straightPower = -driver.left_stick_y;
-                turnPower = -driver.right_stick_x;
-            }
+        frightPower = +sidePower + straightPower + turnPower;
+        brightPower = -sidePower + straightPower + turnPower;
+        bleftPower = +sidePower + straightPower - turnPower;
+        fleftPower = -sidePower + straightPower - turnPower;
 
-            if (driver.x && buffer && !slowPower) {
-                slowPower = true;
-                resetTime = System.currentTimeMillis();
-                buffer = false;
-            }
+        //finds the greatest number than finds the scale factor to make that equal to one.
 
-            if (driver.x && buffer && slowPower) {
+        float scaleAdjust = ScaleAdjustment(frightPower, brightPower, bleftPower, fleftPower, 1);
 
-                slowPower = false;
-                resetTime = System.currentTimeMillis();
-                buffer = false;
+        frightPower *= scaleAdjust;
+        brightPower *= scaleAdjust;
+        fleftPower *= scaleAdjust;
+        brightPower *= scaleAdjust;
 
-            }
+        //deadband system is set to 0.05
+        if (Math.abs(straightPower) > DEADBAND || Math.abs(sidePower) > DEADBAND || Math.abs(turnPower) > DEADBAND) {
 
-            /*if (driver.y && buffer && !isFieldOrientedControl) {
-                isFieldOrientedControl = true;
-                resetTime = System.currentTimeMillis();
-                buffer = false;
-            }
+            fright.setPower(frightPower);
+            bright.setPower(brightPower);
+            bleft.setPower(bleftPower);
+            fleft.setPower(fleftPower);
 
-            if (driver.y && buffer && isFieldOrientedControl) {
+        } else {
 
-                isFieldOrientedControl = false;
-                resetTime = System.currentTimeMillis();
-                buffer = false;
+            fright.setPower(0);
+            bright.setPower(0);
+            bleft.setPower(0);
+            fleft.setPower(0);
 
-            }*/
-
-            if (slowPower) {
-                sidePower /= 2;
-                straightPower /= 5;
-                turnPower /= 5;
-            }
-
-            frightPower = +sidePower + straightPower + turnPower;
-            brightPower = -sidePower + straightPower + turnPower;
-            bleftPower = +sidePower + straightPower - turnPower;
-            fleftPower = -sidePower + straightPower - turnPower;
-
-            //finds the greatest number than finds the scale factor to make that equal to one.
-            float scaleAdjust = ScaleAdjustment(frightPower, brightPower, bleftPower, fleftPower, 1);
-            frightPower *= scaleAdjust;
-            brightPower *= scaleAdjust;
-            fleftPower *= scaleAdjust;
-            brightPower *= scaleAdjust;
-
-            //deadband system is set to 0.05
-            //if (Math.abs(straightPower) > DEADBAND || Math.abs(sidePower) > DEADBAND || Math.abs(turnPower) > DEADBAND) {
-
-                fright.setPower(frightPower);
-                bright.setPower(brightPower);
-                bleft.setPower(bleftPower);
-                fleft.setPower(fleftPower);
-
-            //} else {
-
-                //fright.setPower(0);
-                //bright.setPower(0);
-                //bleft.setPower(0);
-                //fleft.setPower(0);
-
-            //}
-
-        double refreshTime = System.currentTimeMillis() - startTime;
-        startTime = System.currentTimeMillis();
-
-
+        }
 
         /*op.telemetry.addData("left  y", Robot.driver.left_stick_y);
         op.telemetry.addData("right x", Robot.driver.right_stick_x);
@@ -191,7 +153,7 @@ public class DriveCommand extends BioCommand {
         op.telemetry.addData("Field Oriented", isFieldOrientedControl);
         op.telemetry.addData("Refresh Time", refreshTime);
         op.telemetry.update();*/
-    }
+        }
 
 
     private void autoStack() {
@@ -236,6 +198,55 @@ public class DriveCommand extends BioCommand {
             setPows(brp + mod, frp + mod, blp - mod, flp - mod);
         }*/
         setPows(0, 0, 0, 0);
+    }
+
+    public void FieldOrientedControl(){
+
+        if (driver.y && buffer && !isFieldOrientedControl) {
+            isFieldOrientedControl = true;
+            resetTime = System.currentTimeMillis();
+            buffer = false;
+        }
+
+        if (driver.y && buffer && isFieldOrientedControl) {
+            isFieldOrientedControl = false;
+            resetTime = System.currentTimeMillis();buffer = false;
+        }
+
+        if (isFieldOrientedControl) {
+            ToxinFieldBasedControl.Point leftStick = ToxinFieldBasedControl.getLeftJoystick(driver, gyro);
+            sidePower = -(float) leftStick.x;
+            straightPower = -(float) leftStick.y;
+            turnPower = -driver.right_stick_x;
+        } else {
+            sidePower = -driver.left_stick_x;
+            straightPower = -driver.left_stick_y;
+            turnPower = -driver.right_stick_x;
+        }
+
+
+    }
+
+    public void SlowPower(){
+        if (driver.y && buffer && !slowPower) {
+            slowPower = true;
+            resetTime = System.currentTimeMillis();
+            buffer = false;
+        }
+
+        if (driver.y && buffer && slowPower) {
+
+            slowPower = false;
+            resetTime = System.currentTimeMillis();
+            buffer = false;
+
+        }
+
+        if (slowPower) {
+            sidePower /= 2;
+            straightPower /= 5;
+            turnPower /= 5;
+        }
     }
 
     private void setPows(double brp, double frp, double blp, double flp) {
