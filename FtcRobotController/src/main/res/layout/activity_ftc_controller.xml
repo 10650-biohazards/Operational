@@ -124,66 +124,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:visibility="invisible"
       android:text="" />
 
-    <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/textOpMode"
-      android:layout_above="@+id/textGamepad1">
 
-      <LinearLayout
-          android:id="@+id/monitorContainer"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/cameraMonitorViewId"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            />
-        <FrameLayout
-            android:id="@+id/tfodMonitorViewId"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
-
-        <LinearLayout
-            android:id="@+id/cameraMonitorViewId2"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            />
-        <FrameLayout
-            android:id="@+id/tfodMonitorViewId2"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
-
-        </LinearLayout>
-
-      <!-- When visible, the error message will overlay and thus partially
-           obscure part of the camera monitor. We make this trade off so as to
-           allow for a bigger camera monitor view in the common case when the
-           error is not in fact present
-        -->
-        <TextView style="@style/FtcTextViewStyleBold"
-            android:id="@+id/textErrorMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:visibility="invisible"
-            android:textColor="?attr/textMediumDark" />
-
-    </FrameLayout>
 
     <TextView
       android:id="@+id/textGamepad1"
@@ -226,6 +167,67 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:visibility="visible"
         android:src="@drawable/mark" />
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textOpMode"
+        android:layout_above="@+id/textGamepad1">
+
+      <LinearLayout
+          android:id="@+id/monitorContainer"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/cameraMonitorViewId"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            />
+        <FrameLayout
+            android:id="@+id/tfodMonitorViewId"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+        <LinearLayout
+            android:id="@+id/cameraMonitorViewId2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            />
+        <FrameLayout
+            android:id="@+id/tfodMonitorViewId2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+
+      </LinearLayout>
+
+      <!-- When visible, the error message will overlay and thus partially
+           obscure part of the camera monitor. We make this trade off so as to
+           allow for a bigger camera monitor view in the common case when the
+           error is not in fact present
+        -->
+      <TextView style="@style/FtcTextViewStyleBold"
+          android:id="@+id/textErrorMessage"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text=""
+          android:visibility="invisible"
+          android:textColor="?attr/textMediumDark" />
+
+    </FrameLayout>
 
   </RelativeLayout>
 

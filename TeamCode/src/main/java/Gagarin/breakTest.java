@@ -1,11 +1,13 @@
 package Gagarin;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.PID;
 
 @TeleOp(name = "Robot Breaker")
+@Disabled
 public class breakTest extends ExplosiveAuto {
 
     GagarinRobot robot;

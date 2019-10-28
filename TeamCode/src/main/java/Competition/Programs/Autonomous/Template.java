@@ -1,7 +1,5 @@
 package Competition.Programs.Autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import Competition.Robot;
 import Competition.RobotMap;
 import Competition.Subsystems.DriveSubsystem;
@@ -9,7 +7,6 @@ import Competition.Subsystems.VisionSubsystem;
 import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 
-@Autonomous(name = "Red Skystone Only")
 public class Template extends ExplosiveAuto {
 
     DriveSubsystem drive;

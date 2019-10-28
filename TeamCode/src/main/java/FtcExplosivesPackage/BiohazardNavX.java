@@ -1,20 +1,26 @@
 package FtcExplosivesPackage;
 
+import android.media.MediaPlayer;
+
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.R;
 
 public class BiohazardNavX implements ExplosivePIDEnabledHardware {
     private static BiohazardNavX instance = null;
     private NavxMicroNavigationSensor imu = null;
     public double startAng, startPitch;
+    HardwareMap hw;
+    boolean first = true;
 
     public BiohazardNavX(HardwareMap hw, String name, double startAng){
         imu = hw.get(NavxMicroNavigationSensor.class, name);
         this.startAng = startAng;
+        this.hw = hw;
     }
 
     public static BiohazardNavX getInstance(HardwareMap hw, String name){
@@ -26,6 +32,13 @@ public class BiohazardNavX implements ExplosivePIDEnabledHardware {
 
     public double getYaw(){
         try{
+            if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle == 0.0 && first) {
+                MediaPlayer player = MediaPlayer.create(hw.appContext, R.raw.oofwiisports);
+                player.setLooping(false);
+                player.seekTo(0);
+                player.start();
+                first = false;
+            }
             return startAng - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         } catch(Exception e){
             android.util.Log.d("Robot", "GYRO ERROR: " + e.getMessage());

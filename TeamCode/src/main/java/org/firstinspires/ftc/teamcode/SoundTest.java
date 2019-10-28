@@ -25,10 +25,12 @@ import android.media.MediaPlayer;
 
 import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.ftcrobotcontroller.R;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp (name = "no2")
+@Disabled
 public class SoundTest extends LinearOpMode
 {
 
