@@ -51,6 +51,7 @@ public class MechCommand extends BioCommand {
 
     @Override
     public void init() {
+
         liftPID = new PID();
 
         intRight = RobotMap.intRight;
@@ -69,14 +70,17 @@ public class MechCommand extends BioCommand {
         rotationTarg = rotator.getCurrentPosition();
         liftPID.setup (42,0,42,0,0,lifttarg);
         rotPID.setup(42, 0, 42, 0, 0, rotationTarg);
+
     }
 
     @Override
     public void start() {
+
         intLeft.setPower(0);
         intRight.setPower(0);
 
         startTime = System.currentTimeMillis();
+
     }
 
     @Override
@@ -94,6 +98,7 @@ public class MechCommand extends BioCommand {
 
         moveRotation();
         //updateRotation();
+
     }
 
     public void autoStack() {
@@ -114,16 +119,25 @@ public class MechCommand extends BioCommand {
     }
 
     public void cairrage() {
+
         if (manip.x) {
+
             gripper.setPosition(0.3);
+
         } else {
+
             gripper.setPosition(0.7);
+
         }
 
         if (manip.b) {
+
             swinger.setPosition(0.35);
+
         } else {
+
             swinger.setPosition(0.05);
+
         }
     }
 
@@ -155,11 +169,9 @@ public class MechCommand extends BioCommand {
     }
 
     public void hooker() {
-        if (manip.left_trigger > 0.5) {
-            hooker.setPosition(0.5);
-        } else {
-            hooker.setPosition(1);
-        }
+
+            hooker.setPosition(-0.5 * manip.left_trigger + 1);
+
     }
 
     public void adjTargLevel() {
@@ -167,17 +179,22 @@ public class MechCommand extends BioCommand {
         boolean buffer = startTime + 500 < System.currentTimeMillis();
 
         if (manip.left_bumper && buffer) {
+
             nextLevel++;
             startTime = System.currentTimeMillis();
+
         }
 
         if (manip.left_trigger > 0.05 && buffer && nextLevel > 0) {
+
             nextLevel--;
             startTime = System.currentTimeMillis();
+
         }
 
         Log.e(TAG, "Position: " + nextLevel);
         Log.e(TAG, "Buffer: " + buffer);
+
     }
 
     public int getTargHeight() {
@@ -185,12 +202,18 @@ public class MechCommand extends BioCommand {
     }
 
     public void moveLift() {
+
         if (manip.dpad_up || manip.right_stick_y < 0.05) {
+
             lifttarg = getTargHeight();
+
         }
         if (manip.dpad_up || manip.right_stick_y > 0.05) {
+
             lifttarg = RELOAD_HEIGHT;
+
         }
+
     }
 
     public void updateLift() {
@@ -202,18 +225,26 @@ public class MechCommand extends BioCommand {
     }
 
     public void moveRotation() {
+
         if (manip.right_trigger > 0.05 || manip.dpad_down) {
+
             rotationTarg = RELOAD;
+
         }
         if (manip.right_bumper || manip.dpad_up) {
+
             rotationTarg = VERTICAL;
+
         }
+
     }
 
     public void updateRotation() {
+
         rotPID.adjTarg(rotationTarg);
 
         rotator.setPower(rotPID.status(rotator.getCurrentPosition()));
+
     }
 
     @Override

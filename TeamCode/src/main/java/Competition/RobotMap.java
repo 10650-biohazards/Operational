@@ -18,6 +18,8 @@ public class RobotMap {
     public static ModernRoboticsI2cRangeSensor frontRange, backRange;
 
     public RobotMap(HardwareMap hw) {
+        //Hello, there
+        //GENERAL KENOBI!
         bright  = hw.get(DcMotor.class, "bright");
         fright  = hw.get(DcMotor.class, "fright");
         bleft   = hw.get(DcMotor.class, "bleft");

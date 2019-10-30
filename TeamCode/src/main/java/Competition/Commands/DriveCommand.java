@@ -35,7 +35,6 @@ public class DriveCommand extends BioCommand {
 
     HardwareMap hw;
 
-
     BiohazardTele op;
     private float sidePower, straightPower, turnPower, frightPower, brightPower, fleftPower, bleftPower;
     private boolean slowPower = false;
@@ -46,6 +45,7 @@ public class DriveCommand extends BioCommand {
 
 
     public DriveCommand(BiohazardTele op) {
+
         super(op, "drive");
         u = new Utility(op);
         Robot robot = new Robot(op);
@@ -55,11 +55,13 @@ public class DriveCommand extends BioCommand {
 
         turnPID.setup(0.05, 0, 0, 0, 0.5, 0);
         this.op = op;
+
     }
 
     //finds the biggest number that is greater than one and proportionally
     //reduces it and the other numbers so the greatest value is equal to one
     public float ScaleAdjustment(float a, float b, float c, float d, float maxValue){
+
         float largestValue = Math.max(Math.max(a,b) ,Math.max(c,d));
         float adjustment = 0;
         if(largestValue > maxValue){
@@ -68,11 +70,13 @@ public class DriveCommand extends BioCommand {
             adjustment = 1;
         }
         return adjustment;
+
     }
 
 
     @Override
     public void init() {
+
         bright = RobotMap.bright;
         fright = RobotMap.fright;
         bleft = RobotMap.bleft;
@@ -81,7 +85,6 @@ public class DriveCommand extends BioCommand {
         gyro = RobotMap.gyro;
 
         driver = Robot.driver;
-
 
     }
 
@@ -94,18 +97,47 @@ public class DriveCommand extends BioCommand {
     public void loop() {
 
         if (driver.a) {
+
             if (first) {
+
                 first = false;
                 u.waitMS(100);
-            }
-            //autoStack();
+
+            }//autoStack();
+
         } else {
+
             first = true;
+
         }
 
         buffer = System.currentTimeMillis() > resetTime + 200;
 
-        FieldOrientedControl();
+        if (driver.back && buffer && !isFieldOrientedControl) {
+
+            isFieldOrientedControl = true;
+            resetTime = System.currentTimeMillis();
+            buffer = false;
+
+        }
+
+        if (driver.back && buffer && isFieldOrientedControl) {
+
+            isFieldOrientedControl = false;
+            resetTime = System.currentTimeMillis();
+            buffer = false;
+
+        }
+
+        if (isFieldOrientedControl){
+
+            FieldOrientedControl();
+
+        } else {
+
+            ObjectOrientedControl();
+
+        }
 
         SlowPower();
 
@@ -126,17 +158,11 @@ public class DriveCommand extends BioCommand {
         //deadband system is set to 0.05
         if (Math.abs(straightPower) > DEADBAND || Math.abs(sidePower) > DEADBAND || Math.abs(turnPower) > DEADBAND) {
 
-            fright.setPower(frightPower);
-            bright.setPower(brightPower);
-            bleft.setPower(bleftPower);
-            fleft.setPower(fleftPower);
+            setPows(brightPower,frightPower,bleftPower,fleftPower);
 
         } else {
 
-            fright.setPower(0);
-            bright.setPower(0);
-            bleft.setPower(0);
-            fleft.setPower(0);
+            setPows(0,0,0,0);
 
         }
 
@@ -202,36 +228,28 @@ public class DriveCommand extends BioCommand {
 
     public void FieldOrientedControl(){
 
-        if (driver.y && buffer && !isFieldOrientedControl) {
-            isFieldOrientedControl = true;
-            resetTime = System.currentTimeMillis();
-            buffer = false;
-        }
+        ToxinFieldBasedControl.Point leftStick = ToxinFieldBasedControl.getLeftJoystick(driver, gyro);
+        sidePower = -(float) leftStick.x;
+        straightPower = -(float) leftStick.y;
+        turnPower = -driver.right_stick_x;
 
-        if (driver.y && buffer && isFieldOrientedControl) {
-            isFieldOrientedControl = false;
-            resetTime = System.currentTimeMillis();buffer = false;
-        }
+    }
 
-        if (isFieldOrientedControl) {
-            ToxinFieldBasedControl.Point leftStick = ToxinFieldBasedControl.getLeftJoystick(driver, gyro);
-            sidePower = -(float) leftStick.x;
-            straightPower = -(float) leftStick.y;
-            turnPower = -driver.right_stick_x;
-        } else {
-            sidePower = -driver.left_stick_x;
-            straightPower = -driver.left_stick_y;
-            turnPower = -driver.right_stick_x;
-        }
+    public void ObjectOrientedControl(){
 
+        sidePower = -driver.left_stick_x;
+        straightPower = -driver.left_stick_y;
+        turnPower = -driver.right_stick_x;
 
     }
 
     public void SlowPower(){
         if (driver.y && buffer && !slowPower) {
+
             slowPower = true;
             resetTime = System.currentTimeMillis();
             buffer = false;
+
         }
 
         if (driver.y && buffer && slowPower) {
@@ -243,24 +261,27 @@ public class DriveCommand extends BioCommand {
         }
 
         if (slowPower) {
+
             sidePower /= 2;
             straightPower /= 5;
             turnPower /= 5;
+
         }
     }
 
     private void setPows(double brp, double frp, double blp, double flp) {
+
         bright.setPower(brp);
         fright.setPower(frp);
         bleft.setPower(blp);
         fleft.setPower(flp);
+
     }
 
     @Override
     public void stop() {
-        bright.setPower(0);
-        fright.setPower(0);
-        bleft.setPower(0);
-        fleft.setPower(0);
+
+        setPows(0,0,0,0);
+
     }
 }
