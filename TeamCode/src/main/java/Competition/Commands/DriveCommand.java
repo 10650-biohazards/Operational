@@ -62,12 +62,16 @@ public class DriveCommand extends BioCommand {
     //reduces it and the other numbers so the greatest value is equal to one
     public float ScaleAdjustment(float a, float b, float c, float d, float maxValue){
 
-        float largestValue = Math.max(Math.max(a,b) ,Math.max(c,d));
+        float largestValue = Math.max(Math.max(Math.abs(a), Math.abs(b)) ,Math.max(Math.abs(c),Math.abs(d)));
         float adjustment = 0;
         if(largestValue > maxValue){
+
             adjustment = maxValue/largestValue;
+
         } else {
+
             adjustment = 1;
+
         }
         return adjustment;
 
@@ -90,7 +94,9 @@ public class DriveCommand extends BioCommand {
 
     @Override
     public void start() {
+
         startTime = System.currentTimeMillis();
+
     }
 
     @Override
@@ -113,17 +119,9 @@ public class DriveCommand extends BioCommand {
 
         buffer = System.currentTimeMillis() > resetTime + 200;
 
-        if (driver.back && buffer && !isFieldOrientedControl) {
+        if (driver.back && buffer) {
 
-            isFieldOrientedControl = true;
-            resetTime = System.currentTimeMillis();
-            buffer = false;
-
-        }
-
-        if (driver.back && buffer && isFieldOrientedControl) {
-
-            isFieldOrientedControl = false;
+            isFieldOrientedControl = !isFieldOrientedControl;
             resetTime = System.currentTimeMillis();
             buffer = false;
 
@@ -150,10 +148,11 @@ public class DriveCommand extends BioCommand {
 
         float scaleAdjust = ScaleAdjustment(frightPower, brightPower, bleftPower, fleftPower, 1);
 
+        brightPower *= scaleAdjust;
         frightPower *= scaleAdjust;
-        brightPower *= scaleAdjust;
+        bleftPower *= scaleAdjust;
         fleftPower *= scaleAdjust;
-        brightPower *= scaleAdjust;
+
 
         //deadband system is set to 0.05
         if (Math.abs(straightPower) > DEADBAND || Math.abs(sidePower) > DEADBAND || Math.abs(turnPower) > DEADBAND) {
@@ -183,9 +182,8 @@ public class DriveCommand extends BioCommand {
 
 
     private void autoStack() {
+
         boolean done = false;
-
-
         /*while (!done) {
             double stackX = VisionCommand.stackX;
             int width = VisionCommand.stackWid;
@@ -244,21 +242,14 @@ public class DriveCommand extends BioCommand {
     }
 
     public void SlowPower(){
-        if (driver.y && buffer && !slowPower) {
+        if (driver.y && buffer) {
 
-            slowPower = true;
+            slowPower = !slowPower;
             resetTime = System.currentTimeMillis();
             buffer = false;
 
         }
 
-        if (driver.y && buffer && slowPower) {
-
-            slowPower = false;
-            resetTime = System.currentTimeMillis();
-            buffer = false;
-
-        }
 
         if (slowPower) {
 
