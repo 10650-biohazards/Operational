@@ -20,7 +20,7 @@ public class Robot {
 
     public Robot(LinearOpMode op) {
         drive = new DriveSubsystem(op);
-        //vision = new VisionSubsystem(op);
+        vision = new VisionSubsystem(op, op.hardwareMap);
         hooker = new HookSubsystem(op);
         driver = op.gamepad1;
         manipulator = op.gamepad2;
@@ -31,7 +31,7 @@ public class Robot {
         drive.enable();
         drive.setTracker(track);
 
-        //vision.enable();
+        vision.enable();
 
         hooker.enable();
     }

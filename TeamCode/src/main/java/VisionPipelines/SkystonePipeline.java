@@ -31,45 +31,47 @@ public class SkystonePipeline extends OpenCvPipeline {
 
         if (processing) {
             //THIS GOOD FOR PHONE
-            int xMax = 105, xMin = 100;
-            int startY = 0, stoneWidth = 40, buffer = 5;
+            //int xMax = 105, xMin = 100;
+            //int startY = 0, stoneWidth = 40, buffer = 5;
 
             //HEY, THIS GOOD FOR WEBCAM
-            //int yMax = 140, yMin = 194;
-            //int startX = 0, stoneWidth = 170, buffer = 60;
+            int yMax = 150, yMin = 170;
+            int startX = 0, stoneWidth = 70, buffer = 20;
 
 
             //Slots for phone
-            ArrayList<myRect> slots = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                slots.add(new myRect(new Point(xMax, startY + (stoneWidth * i) + buffer), new Point(xMin, startY + (stoneWidth * (i + 1)) - buffer)));
-            }
+            //ArrayList<myRect> slots = new ArrayList<>();
+            //for (int i = 0; i < 3; i++) {
+            //    slots.add(new myRect(new Point(xMax, startY + (stoneWidth * i) + buffer), new Point(xMin, startY + (stoneWidth * (i + 1)) - buffer)));
+            //}
 
             //Slots for webcam
-            //ArrayList<Rect> slots = new ArrayList<>();
-            //for (int i = 0; i < 3; i++) {
-            //    slots.add(new Rect(new Point(startX + (stoneWidth * i) + buffer, yMax), new Point(startX + (stoneWidth * (i + 1)) - buffer, yMin)));
-            //}
+            ArrayList<myRect> slots = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                slots.add(new myRect(new Point(startX + (stoneWidth * i) + buffer, yMax), new Point(startX + (stoneWidth * (i + 1)) - buffer, yMin)));
+            }
 
 
             Point location;
             double rectAngle;
 
             //convert to hsv for phone
-            Mat hsv = new Mat();
-            Imgproc.line(rgbaFrame, new Point(0, startY + stoneWidth ), new Point(rgbaFrame.width(), startY + stoneWidth), new Scalar(0, 0, 0), 10);
-            Imgproc.line(rgbaFrame, new Point(0, startY + (stoneWidth * 2)), new Point(rgbaFrame.width(), startY + (stoneWidth * 2)), new Scalar(0, 0, 0), 10);
-            Imgproc.line(rgbaFrame, new Point(0, startY + (stoneWidth * 3)), new Point(rgbaFrame.width(), startY + (stoneWidth * 3)), new Scalar(0, 0, 0), 10);
-            Imgproc.rectangle(rgbaFrame, new Point(xMin + 5, 0), new Point(xMin - 5, rgbaFrame.height()), new Scalar(0, 0, 0), -1);
-            Imgproc.cvtColor(rgbaFrame, hsv, Imgproc.COLOR_RGB2HSV);
+            //Mat hsv = new Mat();
+            //Imgproc.line(rgbaFrame, new Point(0, startY + stoneWidth ), new Point(rgbaFrame.width(), startY + stoneWidth), new Scalar(0, 0, 0), 10);
+            //Imgproc.line(rgbaFrame, new Point(0, startY + (stoneWidth * 2)), new Point(rgbaFrame.width(), startY + (stoneWidth * 2)), new Scalar(0, 0, 0), 10);
+            //Imgproc.line(rgbaFrame, new Point(0, startY + (stoneWidth * 3)), new Point(rgbaFrame.width(), startY + (stoneWidth * 3)), new Scalar(0, 0, 0), 10);
+            //Imgproc.rectangle(rgbaFrame, new Point(xMin + 5, 0), new Point(xMin - 5, rgbaFrame.height()), new Scalar(0, 0, 0), -1);
+            //Imgproc.cvtColor(rgbaFrame, hsv, Imgproc.COLOR_RGB2HSV);
 
             //convert to hsv for webcam
-            //Mat hsv = new Mat();
-            //Imgproc.line(rgbaFrame, new Point(startX + stoneWidth,0 ), new Point(startX + stoneWidth, rgbaFrame.height()), new Scalar(0, 0, 0), 70);
-            //Imgproc.line(rgbaFrame, new Point(startX + (stoneWidth * 2),0 ), new Point(startX + (stoneWidth * 2), rgbaFrame.height()), new Scalar(0, 0, 0), 70);
-            //Imgproc.line(rgbaFrame, new Point(startX + (stoneWidth * 3),0 ), new Point(startX + (stoneWidth * 3), rgbaFrame.height()), new Scalar(0, 0, 0), 70);
-            //Imgproc.rectangle(rgbaFrame, new Point(0,yMin + 10), new Point(rgbaFrame.width(), yMin + 20), new Scalar(0, 0, 0), -1);
-            //Imgproc.cvtColor(rgbaFrame, hsv, Imgproc.COLOR_RGB2HSV);
+            Mat hsv = new Mat();
+            Imgproc.line(rgbaFrame, new Point(startX + stoneWidth,0 ), new Point(startX + stoneWidth, rgbaFrame.height()), new Scalar(0, 0, 0), 2);
+            Imgproc.line(rgbaFrame, new Point(startX + (stoneWidth * 2),0 ), new Point(startX + (stoneWidth * 2), rgbaFrame.height()), new Scalar(0, 0, 0), 2);
+            Imgproc.line(rgbaFrame, new Point(startX + (stoneWidth * 3),0 ), new Point(startX + (stoneWidth * 3), rgbaFrame.height()), new Scalar(0, 0, 0), 2);
+            Imgproc.line(rgbaFrame, new Point(0, yMin - 5), new Point(rgbaFrame.width(), yMin - 5), new Scalar(0, 0, 0), 2);
+            Imgproc.line(rgbaFrame, new Point(0, yMax + 5), new Point(rgbaFrame.width(), yMax + 5), new Scalar(0, 0, 0), 2);
+            Imgproc.rectangle(rgbaFrame, new Point(0,yMin + 10), new Point(rgbaFrame.width(), yMin + 20), new Scalar(0, 0, 0), 2);
+            Imgproc.cvtColor(rgbaFrame, hsv, Imgproc.COLOR_RGB2HSV);
 
             //h range is 0-179
             //s range is 0-255
@@ -134,15 +136,11 @@ public class SkystonePipeline extends OpenCvPipeline {
             for (MatOfPoint currCont : contours) {
                 myRect rect = ImageUtil.rectToMyRect(Imgproc.boundingRect(currCont));
 
-                Point topRight = new Point(rect.mid().x + ((double)rect.width / 4), rect.mid().y - ((double)rect.width / 4));
-                Point botRight = new Point(rect.mid().x + ((double)rect.width / 4), rect.mid().y + ((double)rect.width / 4));
-                Point topLeft = new Point(rect.mid().x - ((double)rect.width / 4), rect.mid().y - ((double)rect.width / 4));
-                Point botLeft = new Point(rect.mid().x - ((double)rect.width / 4), rect.mid().y + ((double)rect.width / 4));
+                Point right = new Point(rect.mid().x + ((double)rect.width / 4), rect.mid().y);
+                Point left = new Point(rect.mid().x + ((double)rect.width / 4), rect.mid().y);
                 if (rect.area() > 200
-                        && rgbaFrame.get((int)topRight.y, (int)topRight.x)[0] == 255
-                        && rgbaFrame.get((int)botRight.y, (int)botRight.x)[0] == 255
-                        && rgbaFrame.get((int)topLeft.y, (int)topLeft.x)[0] == 255
-                        && rgbaFrame.get((int)botLeft.y, (int)botLeft.x)[0] == 255) {
+                        && rgbaFrame.get((int)left.y, (int)left.x)[0] == 255
+                        && rgbaFrame.get((int)right.y, (int)right.x)[0] == 255) {
                     Imgproc.rectangle(rgbaFrame, rect.bl(), rect.tr(), new Scalar(0, 255, 0), 3);
                     Imgproc.rectangle(rgbaFrame, new Point(rect.mid().x + 1, rect.mid().y + 1), new Point(rect.mid().x - 1, rect.mid().y - 1), new Scalar(255, 255, 255), 3);
                     stones.add(rect);

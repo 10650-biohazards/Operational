@@ -22,7 +22,7 @@ public class DriveSubsystem extends BioSubsystem {
     LinearOpMode op;
     public BiohazardNavX gyro;
 
-    ModernRoboticsI2cRangeSensor frontRange;
+    ModernRoboticsI2cRangeSensor frontRange, backRange;
 
     public driveTracker2 track;
 
@@ -55,7 +55,7 @@ public class DriveSubsystem extends BioSubsystem {
         PID movePID = new PID();
         PID modPID = new PID();
 
-        double target = bright.getCurrentPosition() - targDist;
+        double target = bright.getCurrentPosition() + targDist;
         double targAng = refine(gyro.getYaw());
 
         movePID.setup(0.00015, 0, 0, 0.2, 20, target);
@@ -67,7 +67,7 @@ public class DriveSubsystem extends BioSubsystem {
 
             //double mod = modPID.status(refine(gyro.getYaw()));
             double mod = 0;
-            double power = -movePID.status(bright.getCurrentPosition());
+            double power = movePID.status(bright.getCurrentPosition());
 
             op.telemetry.addData("POWER", power);
             op.telemetry.addData("br", bright.getCurrentPosition());
@@ -89,19 +89,67 @@ public class DriveSubsystem extends BioSubsystem {
     }
     public void moveStraightPID(double targDist) {moveStraightPID(targDist, 3000);}
 
-    public void moveRangePID(double targDist, int stopTime, ModernRoboticsI2cRangeSensor range) {
+    public void moveStraightModded(double targDist, int stopTime) {
+        PID movePID = new PID();
+        PID modPID = new PID();
+
+        double target = bright.getCurrentPosition() + targDist;
+        double targAng = refine(gyro.getYaw());
+
+        movePID.setup(0.00015, 0, 0, 0.2, 20, target);
+        modPID.setup(0.02, 0, 0, 0, 0, targAng);
+
+        u.startTimer(stopTime);
+
+        while (!u.timerDone() && !movePID.done()) {
+
+            double mod = modPID.status(refine(gyro.getYaw()));
+            double power = movePID.status(bright.getCurrentPosition());
+
+            op.telemetry.addData("POWER", power);
+            op.telemetry.addData("br", bright.getCurrentPosition());
+            op.telemetry.addData("fr", fright.getCurrentPosition());
+            op.telemetry.addData("bl", bleft.getCurrentPosition());
+            op.telemetry.addData("fl", fleft.getCurrentPosition());
+            op.telemetry.addData("Target", target);
+            op.telemetry.addData("TargAng", targAng);
+            op.telemetry.update();
+
+            setPows(power - mod, power - mod, power + mod, power + mod);
+
+            track.refresh();
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
+        u.waitMS(200);
+    }
+
+    public void moveRangePID(double targDist, int stopTime, boolean front) {
         PID movePID = new PID();
         PID modPID = new PID();
 
         double target = targDist;
 
-        movePID.setup(0.00625, 0, 0, 0.2, 20, target);
+        ModernRoboticsI2cRangeSensor range;
+
+        if (front) {
+            range = frontRange;
+        } else {
+            range = backRange;
+        }
+
+        movePID.setup(0.015, 0, 0, 0.12, 0.1, target);
 
         u.startTimer(stopTime);
 
         while (!u.timerDone() && !movePID.done()) {
 
             double power = -movePID.status(range.getDistance(DistanceUnit.INCH));
+
+            if (!front) {
+                power *= -1;
+            }
 
             op.telemetry.addData("POWER", power);
             op.telemetry.addData("Dist", range.getDistance(DistanceUnit.INCH));
@@ -181,14 +229,14 @@ public class DriveSubsystem extends BioSubsystem {
         double curr = refine(gyro.getYaw());
         if (Math.abs(targetAng - curr) > 180) {
             if (curr > 180) {
-                mod = 360 - curr + 5;
+                mod = 360 - curr + 15;
             } else {
-                mod = 360 - targetAng + 5;
+                mod = 360 - targetAng + 15;
             }
         }
 
         PID movePID = new PID();
-        movePID.setup(0.003, 0, 0, 0.12, 0.25,refine(targetAng + mod));
+        movePID.setup(0.002, 0, 0, 0.17, 0.25,refine(targetAng + mod));
 
         op.telemetry.addData("mod", mod);
         op.telemetry.addData("raw ang", gyro.getYaw());
@@ -230,14 +278,14 @@ public class DriveSubsystem extends BioSubsystem {
         double curr = refine(gyro.getYaw());
         if (Math.abs(targetAng - curr) > 180) {
             if (curr > 180) {
-                mod = 360 - curr + 5;
+                mod = 360 - curr + 15;
             } else {
-                mod = 360 - targetAng + 5;
+                mod = 360 - targetAng + 15;
             }
         }
 
         PID movePID = new PID();
-        movePID.setup(0.006, 0, 0, 0.35, 0.25,refine(targetAng + mod));
+        movePID.setup(0.006, 0, 0, 0.2, 0.25,refine(targetAng + mod));
 
         op.telemetry.addData("mod", mod);
         op.telemetry.addData("raw ang", gyro.getYaw());
@@ -278,8 +326,8 @@ public class DriveSubsystem extends BioSubsystem {
 
         PID breakPIDF = new PID();
         PID breakPIDB = new PID();
-        breakPIDF.setup(0.05, 0, 0, 0, 0, 0);
-        breakPIDB.setup(0.05, 0, 0, 0, 0, 0);
+        breakPIDF.setup(0.00, 0, 0, 0, 0, 0);
+        breakPIDB.setup(0.00, 0, 0, 0, 0, 0);
 
         if (right) {
             breakPIDB.setTarget(bright.getCurrentPosition());
@@ -291,14 +339,70 @@ public class DriveSubsystem extends BioSubsystem {
 
         double curr = refine(gyro.getYaw());
         if (targetAng - curr < 0 && right) {
-            mod = 360 - curr + 5;
+            mod = 360 - curr + 15;
         }
         if (refine(gyro.getYaw()) - targetAng < 0 && !right) {
-            mod = 360 - targetAng + 5;
+            mod = 360 - targetAng + 15;
         }
 
         PID movePID = new PID();
-        movePID.setup(0.1, 0, 0, 0.2, 0.2, refine(targetAng + mod));
+        movePID.setup(0.02, 0, 0, 0.1, 0.2, refine(targetAng + mod));
+
+        u.startTimer(4000);
+
+        while (!u.timerDone() && !movePID.done()) {
+            double currAng = refine(gyro.getYaw() + mod);
+
+            double power = movePID.status(currAng);
+
+            op.telemetry.addData("mod", mod);
+            op.telemetry.addData("Power", power);
+            op.telemetry.addData("working", currAng);
+            op.telemetry.addData("refined", refine(gyro.getYaw()));
+            op.telemetry.addData("Raw Target", targetAng);
+            op.telemetry.addData("Modded Target", refine(targetAng + mod));
+            op.telemetry.update();
+
+            if (right) {
+                setPows(0, 0, power, power);
+            } else {
+                setPows(-power, -power, 0, 0);
+            }
+
+            track.refresh();
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
+        u.waitMS(200);
+    }
+
+    public void swingTurnSlow(double targetAng, boolean right) {
+        double mod = 0;
+
+        PID breakPIDF = new PID();
+        PID breakPIDB = new PID();
+        breakPIDF.setup(0.00, 0, 0, 0, 0, 0);
+        breakPIDB.setup(0.00, 0, 0, 0, 0, 0);
+
+        if (right) {
+            breakPIDB.setTarget(bright.getCurrentPosition());
+            breakPIDF.setTarget(fright.getCurrentPosition());
+        } else {
+            breakPIDB.setTarget(bleft.getCurrentPosition());
+            breakPIDF.setTarget(fleft.getCurrentPosition());
+        }
+
+        double curr = refine(gyro.getYaw());
+        if (targetAng - curr < 0 && right) {
+            mod = 360 - curr + 15;
+        }
+        if (refine(gyro.getYaw()) - targetAng < 0 && !right) {
+            mod = 360 - targetAng + 15;
+        }
+
+        PID movePID = new PID();
+        movePID.setup(0.01, 0, 0, 0.15, 0.2, refine(targetAng + mod));
 
         u.startTimer(30000);
 
@@ -315,7 +419,11 @@ public class DriveSubsystem extends BioSubsystem {
             op.telemetry.addData("Modded Target", refine(targetAng + mod));
             op.telemetry.update();
 
-            setPows(power, power, -power, -power);
+            if (right) {
+                setPows(0, 0, power, power);
+            } else {
+                setPows(-power, -power, 0, 0);
+            }
 
             track.refresh();
 
@@ -352,6 +460,7 @@ public class DriveSubsystem extends BioSubsystem {
         gyro = RobotMap.gyro;
 
         frontRange = RobotMap.frontRange;
+        backRange = RobotMap.backRange;
     }
 
     @Override

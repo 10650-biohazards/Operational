@@ -32,6 +32,8 @@ public class HookSubsystem extends Subsystem {
         hooker.setPosition(1);
     }
 
+    public void skystone() {hooker.setPosition(0.7);}
+
     @Override
     public void stop() {
         release();
