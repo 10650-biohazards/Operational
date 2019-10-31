@@ -43,12 +43,11 @@ public class RedFoundationOnly extends ExplosiveAuto {
     @Override
     public void body() throws InterruptedException {
 
-        drive.moveRangePID(11, 5000, RobotMap.frontRange);
 
-        /*
         drive.moveStrafePow(-1, 500);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
+        drive.moveRangePID(16, 5000, true);
         hooker.hook();
         u.waitMS(1000);
         drive.moveStrafePow(1, 1800);
@@ -59,8 +58,7 @@ public class RedFoundationOnly extends ExplosiveAuto {
         drive.moveStraightPID(-400);
         drive.moveTurnPID(90);
         drive.moveStraightPID(1000);
-        drive.moveTurnPID(270);
-        drive.moveStraightPID(-1000);*/
+        drive.moveStraightPID(-800);
     }
 
     @Override

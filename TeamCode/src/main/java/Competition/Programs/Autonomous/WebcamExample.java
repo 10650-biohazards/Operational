@@ -35,8 +35,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import VisionPipelines.SkystonePipeline;
+
 @TeleOp(name = "Discord")
-@Disabled
 public class WebcamExample extends LinearOpMode {
     OpenCvCamera webcam;
 
@@ -69,7 +70,7 @@ public class WebcamExample extends LinearOpMode {
          * of a frame from the camera. Note that switching pipelines on-the-fly
          * (while a streaming session is in flight) *IS* supported.
          */
-        webcam.setPipeline(new SamplePipeline());
+        webcam.setPipeline(new SkystonePipeline());
 
         /*
          * Tell the webcam to start streaming images to us! Note that you must make sure
@@ -107,6 +108,7 @@ public class WebcamExample extends LinearOpMode {
             telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+            telemetry.addData("Result", SkystonePipeline.result);
             telemetry.update();
 
             /*
