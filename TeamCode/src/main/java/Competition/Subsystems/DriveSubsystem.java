@@ -58,7 +58,7 @@ public class DriveSubsystem extends BioSubsystem {
         double target = bright.getCurrentPosition() + targDist;
         double targAng = refine(gyro.getYaw());
 
-        movePID.setup(0.0002, 0, 0, 0.2, 20, target);
+        movePID.setup(0.00023, 0, 0, 0.10, 5, target);
         //modPID.setup(0.02, 0, 0, 0, 0, targAng);
 
         u.startTimer(stopTime);
@@ -139,7 +139,7 @@ public class DriveSubsystem extends BioSubsystem {
             range = backRange;
         }
 
-        movePID.setup(0.015, 0, 0, 0.1, 0.1, target);
+        movePID.setup(0.012, 0, 0, 0.1, 0.1, target);
 
         u.startTimer(stopTime);
 
@@ -236,7 +236,7 @@ public class DriveSubsystem extends BioSubsystem {
         }
 
         PID movePID = new PID();
-        movePID.setup(0.0045, 0, 0, 0.11, 0.25,refine(targetAng + mod));
+        movePID.setup(0.002, 0, 0, 0.14, 0.25,refine(targetAng + mod));
 
         op.telemetry.addData("mod", mod);
         op.telemetry.addData("raw ang", gyro.getYaw());

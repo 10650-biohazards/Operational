@@ -28,6 +28,8 @@ public class MechCommand extends BioCommand {
 
     private Gamepad manip, driver;
 
+    BiohazardTele op;
+
 
     //ROTATION STUFF
     private final int VERTICAL = 42;
@@ -47,6 +49,7 @@ public class MechCommand extends BioCommand {
 
     public MechCommand(BiohazardTele op) {
         super(op, "mech");
+        this.op = op;
     }
 
     @Override
@@ -172,6 +175,8 @@ public class MechCommand extends BioCommand {
 
             hooker.setPosition(-0.5 * manip.left_trigger + 1);
 
+            op.telemetry.addData("hooker", hooker.getPosition());
+            op.telemetry.update();
     }
 
     public void adjTargLevel() {

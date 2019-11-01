@@ -21,7 +21,6 @@ public class DriveCommand extends BioCommand {
 
     private DcMotor bright, fright, bleft, fleft;
     private BiohazardNavX gyro;
-    DriveSubsystem drive;
 
     private Gamepad driver;
 
@@ -49,9 +48,6 @@ public class DriveCommand extends BioCommand {
         super(op, "drive");
         u = new Utility(op);
         Robot robot = new Robot(op);
-        robot.enable();
-
-        drive = Robot.drive;
 
         turnPID.setup(0.05, 0, 0, 0, 0.5, 0);
         this.op = op;

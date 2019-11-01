@@ -6,10 +6,9 @@ import Competition.Robot;
 import Competition.RobotMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
+import Competition.Subsystems.IntakeSubsystem;
 import Competition.Subsystems.VisionSubsystem;
-import DubinsCurve.Node;
 import DubinsCurve.curveProcessor3;
-import DubinsCurve.myPoint;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
@@ -19,6 +18,7 @@ public class RedSkyOnly extends ExplosiveAuto {
     DriveSubsystem drive;
     VisionSubsystem vision;
     HookSubsystem hook;
+    IntakeSubsystem intake;
     curveProcessor3 curve;
     Utility u = new Utility(this);
 
@@ -34,6 +34,7 @@ public class RedSkyOnly extends ExplosiveAuto {
         drive = Robot.drive;
         vision = Robot.vision;
         hook = Robot.hooker;
+        intake = Robot.intake;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }
@@ -41,17 +42,77 @@ public class RedSkyOnly extends ExplosiveAuto {
     @Override
     public void initAction() {
 
-
         waitForStart();
 
         int skyPos = vision.grabSkyPos();
 
-        telemetry.addData("pos", skyPos);
-        telemetry.update();
+        //telemetry.addData("pos", skyPos);
+        //telemetry.update();
 
-        u.waitMS(2000);
+        hook.release();
 
         drive.moveStraightPID(700);
+        drive.moveTurnPID(90);
+
+        if (skyPos == 0) {
+            drive.moveRangePID(5, 3000, false);
+            drive.moveStrafePow(-0.7, 500);
+            drive.moveTurnPID(90);
+
+            intake.intake();
+            drive.moveStraightPID(300);
+
+            drive.moveStrafePow(0.7, 900);
+            intake.halt();
+            drive.moveTurnPID(100);
+            drive.moveStraightPID(2200);
+            intake.outtake();
+            drive.moveStraightPID(-600);
+            intake.halt();
+        } else if (skyPos == 1) {
+            drive.moveRangePID(13, 3000, false);
+            drive.moveStrafePow(-0.7, 500);
+            drive.moveTurnPID(90);
+
+            intake.intake();
+            drive.moveStraightPID(300);
+
+            drive.moveStrafePow(0.7, 900);
+            intake.halt();
+            drive.moveTurnPID(100);
+            drive.moveStraightPID(1900);
+            intake.outtake();
+            drive.moveStraightPID(-500);
+            intake.halt();
+        } else {
+            drive.moveRangePID(20, 3000, false);
+            drive.moveStrafePow(-0.7, 500);
+            drive.moveTurnPID(90);
+
+            intake.intake();
+            drive.moveStraightPID(300);
+
+            drive.moveStrafePow(0.7, 900);
+            intake.halt();
+            drive.moveTurnPID(100);
+            drive.moveStraightPID(1300);
+            intake.outtake();
+            drive.moveStraightPID(-500);
+            intake.halt();
+        }
+
+        /*
+        waitForStart();
+
+        int skyPos = vision.grabSkyPos();
+
+        //telemetry.addData("pos", skyPos);
+        //telemetry.update();
+
+        hook.release();
+
+        drive.moveStraightPID(700);
+        hook.skystone();
         drive.moveTurnPID(90);
 
         if (skyPos == 0) {
@@ -87,7 +148,7 @@ public class RedSkyOnly extends ExplosiveAuto {
             drive.moveStraightModded(1100, 4000);
             hook.release();
             drive.moveStraightPID(-300);
-        }
+        }*/
     }
 
     @Override

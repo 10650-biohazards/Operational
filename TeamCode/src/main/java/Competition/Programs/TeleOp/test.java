@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.R;
@@ -17,6 +18,7 @@ public class test extends OpMode {
 
     DcMotor lift, yes;
     ModernRoboticsI2cRangeSensor ultra;
+    Servo servo;
     PID movePID = new PID();
 
     boolean first = true;

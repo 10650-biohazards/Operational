@@ -19,6 +19,9 @@ public class IntakeSubsystem extends Subsystem {
     public void enable() {
         intLeft = RobotMap.intLeft;
         intRight = RobotMap.intRight;
+
+        intLeft.setPower(0);
+        intRight.setPower(0);
     }
 
     @Override

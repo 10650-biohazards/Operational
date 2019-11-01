@@ -32,7 +32,12 @@ public class HookSubsystem extends Subsystem {
         hooker.setPosition(1);
     }
 
+    //HEY, THIS ONE ALSO WORK FOR PUSHING UPPER EDGE OF SKYSTONE
     public void skystone() {hooker.setPosition(0.7);}
+
+    public void grabSkystone() {
+        hooker.setPosition(0.59);
+    }
 
     @Override
     public void stop() {

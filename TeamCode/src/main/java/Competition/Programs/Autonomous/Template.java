@@ -1,17 +1,23 @@
 package Competition.Programs.Autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import Competition.Robot;
 import Competition.RobotMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.VisionSubsystem;
 import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
+import Utilities.Utility;
 
+@Autonomous (name = "Test Auto")
 public class Template extends ExplosiveAuto {
 
     DriveSubsystem drive;
     VisionSubsystem vision;
     curveProcessor3 curve;
+
+    Utility u = new Utility(this);
 
     @Override
     public void initHardware() {
@@ -20,7 +26,7 @@ public class Template extends ExplosiveAuto {
         robot.enable();
 
         Robot.track.setCurrentNode(-1.5, -2.625, 0);
-        RobotMap.gyro.startAng = 90;
+        RobotMap.gyro.startAng = 0;
 
         drive = Robot.drive;
         vision = Robot.vision;
@@ -35,7 +41,9 @@ public class Template extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-
+        drive.moveTurnPID(5);
+        u.waitMS(2000);
+        drive.moveTurnPID(180);
     }
 
     @Override
