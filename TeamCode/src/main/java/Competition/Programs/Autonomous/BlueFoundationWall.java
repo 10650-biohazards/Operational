@@ -10,13 +10,14 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous(name = "Red Foundation Only", group = "red")
-public class RedFoundationOnly extends ExplosiveAuto {
+@Autonomous(name = "Blue Foundation Only | Wall Park", group = "blue")
+public class BlueFoundationWall extends ExplosiveAuto {
 
     DriveSubsystem drive;
     //VisionSubsystem vision;
     HookSubsystem hooker;
     curveProcessor3 curve;
+
     Utility u = new Utility(this);
 
     @Override
@@ -25,7 +26,7 @@ public class RedFoundationOnly extends ExplosiveAuto {
         Robot robot = new Robot(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(1, -3, 90);
+        Robot.track.setCurrentNode(-1, -3, 90);
         RobotMap.gyro.startAng = 90;
 
         drive = Robot.drive;
@@ -47,18 +48,22 @@ public class RedFoundationOnly extends ExplosiveAuto {
         drive.moveStrafePow(-1, 500);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(16, 5000, true);
+        drive.moveRangePID(11, 5000, false);
         hooker.hook();
         u.waitMS(1000);
         drive.moveStrafePow(1, 1800);
-        drive.moveTurnFound(90);
         hooker.release();
-        drive.moveStraightPID(-1000);
-        drive.moveTurnPID(175);
-        drive.moveStraightPID(-400);
-        drive.moveTurnPID(90);
         drive.moveStraightPID(1000);
-        drive.moveStraightPID(-800);
+        drive.moveTurnPID(5);
+        drive.moveStraightPID(300);
+        drive.moveTurnPID(270);
+        drive.moveStraightPID(1000, 1000);
+        drive.moveStraightPID(-200);
+        drive.moveTurnPID(180);
+        drive.moveStraightPID(2000, 2000);
+        drive.moveStraightPID(-100);
+        drive.moveTurnPID(90);
+        drive.moveStraightPID(400);
     }
 
     @Override

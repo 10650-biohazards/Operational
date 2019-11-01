@@ -10,8 +10,8 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous(name = "Blue Foundation Only", group = "blue")
-public class BlueFoundationOnly extends ExplosiveAuto {
+@Autonomous(name = "Blue Foundation Only | Bridge Park", group = "blue")
+public class BlueFoundationBridge extends ExplosiveAuto {
 
     DriveSubsystem drive;
     //VisionSubsystem vision;
@@ -48,17 +48,21 @@ public class BlueFoundationOnly extends ExplosiveAuto {
         drive.moveStrafePow(-1, 500);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(16, 5000, false);
+        drive.moveRangePID(11, 5000, false);
         hooker.hook();
         u.waitMS(1000);
         drive.moveStrafePow(1, 1800);
         hooker.release();
         drive.moveStraightPID(1000);
         drive.moveTurnPID(5);
-        drive.moveStraightPID(340);
+        drive.moveStraightPID(300);
         drive.moveTurnPID(270);
-        drive.moveStraightPID(1000);
-        drive.moveStraightPID(-800);
+        drive.moveStraightPID(1000, 1000);
+        drive.moveStraightPID(-200);
+        drive.moveTurnPID(180);
+        drive.moveRangePID(24, 3000, true);
+        drive.moveTurnPID(90);
+        drive.moveStraightPID(600);
     }
 
     @Override

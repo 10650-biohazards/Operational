@@ -26,6 +26,12 @@ public class Robot {
         manipulator = op.gamepad2;
     }
 
+    public Robot(LinearOpMode op, boolean teleOp) {
+        driver = op.gamepad1;
+        manipulator = op.gamepad2;
+    }
+
+
     public void enable() {
         track = new driveTracker2(drive);
         drive.enable();

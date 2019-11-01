@@ -19,7 +19,7 @@ public class RealTele extends BiohazardTele {
     @Override
     public void initHardware() {
         RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        Robot robot = new Robot(this, true);
         robot.enable();
 
         drive = new DriveCommand(this);
