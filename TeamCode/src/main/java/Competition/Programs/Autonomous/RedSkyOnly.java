@@ -12,6 +12,8 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
+import org.firstinspires.ftc.teamcode.Soundboard;
+
 @Autonomous(name = "Red Skystone Only", group = "red")
 public class RedSkyOnly extends ExplosiveAuto {
 
@@ -20,6 +22,7 @@ public class RedSkyOnly extends ExplosiveAuto {
     HookSubsystem hook;
     IntakeSubsystem intake;
     curveProcessor3 curve;
+    Soundboard sound;
     Utility u = new Utility(this);
 
     @Override
@@ -35,6 +38,8 @@ public class RedSkyOnly extends ExplosiveAuto {
         vision = Robot.vision;
         hook = Robot.hooker;
         intake = Robot.intake;
+
+        sound = new Soundboard(this.hardwareMap);
 
         curve = new curveProcessor3(drive, telemetry, this);
     }
@@ -55,6 +60,7 @@ public class RedSkyOnly extends ExplosiveAuto {
         drive.moveTurnPID(90);
 
         if (skyPos == 0) {
+            sound.PlaySkystoneSound(Soundboard.SkystoneSound.FIRSTSOUND);
             drive.moveRangePID(5, 3000, false);
             drive.moveStrafePow(-0.7, 500);
             drive.moveTurnPID(90);
@@ -70,6 +76,7 @@ public class RedSkyOnly extends ExplosiveAuto {
             drive.moveStraightPID(-600);
             intake.halt();
         } else if (skyPos == 1) {
+            sound.PlaySkystoneSound(Soundboard.SkystoneSound.SECONDSOUND);
             drive.moveRangePID(13, 3000, false);
             drive.moveStrafePow(-0.7, 500);
             drive.moveTurnPID(90);
@@ -85,6 +92,7 @@ public class RedSkyOnly extends ExplosiveAuto {
             drive.moveStraightPID(-500);
             intake.halt();
         } else {
+            sound.PlaySkystoneSound(Soundboard.SkystoneSound.THIRDSOUND);
             drive.moveRangePID(20, 3000, false);
             drive.moveStrafePow(-0.7, 500);
             drive.moveTurnPID(90);
@@ -95,7 +103,7 @@ public class RedSkyOnly extends ExplosiveAuto {
             drive.moveStrafePow(0.7, 900);
             intake.halt();
             drive.moveTurnPID(100);
-            drive.moveStraightPID(1300);
+            drive.moveStraightPID(1500);
             intake.outtake();
             drive.moveStraightPID(-500);
             intake.halt();

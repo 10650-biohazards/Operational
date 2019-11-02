@@ -23,11 +23,11 @@ public class RealTele extends BiohazardTele {
 
         drive = new DriveCommand(this);
         mech = new MechCommand(this);
-        vision = new VisionCommand(this, hardwareMap);
+        //vision = new VisionCommand(this, hardwareMap);
 
         drive.enable();
         mech.enable();
-        vision.enable();
+        //vision.enable();
     }
 
     @Override

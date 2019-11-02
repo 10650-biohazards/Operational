@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
-import Competition.Subsystems.IntakeSubsystem;
 import Competition.Subsystems.VisionSubsystem;
+import Competition.Subsystems.IntakeSubsystem;
 import Utilities.driveTracker2;
 
 public class Robot {
@@ -33,7 +33,6 @@ public class Robot {
         driver = op.gamepad1;
         manipulator = op.gamepad2;
     }
-
 
     public void enable() {
         track = new driveTracker2(drive);

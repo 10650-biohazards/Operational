@@ -45,7 +45,7 @@ public class RedFoundationWall extends ExplosiveAuto {
         drive.moveStrafePow(-1, 500);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(11, 5000, true);
+        drive.moveRangePID(13, 5000, true);
         hooker.hook();
         u.waitMS(1000);
         drive.moveStrafePow(1, 1800);

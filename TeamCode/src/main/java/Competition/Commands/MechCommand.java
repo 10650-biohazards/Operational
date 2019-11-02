@@ -5,12 +5,15 @@ import android.util.Log;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import Competition.Robot;
 import Competition.RobotMap;
 import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardTele;
 import Utilities.PID;
+
+import org.firstinspires.ftc.teamcode.Soundboard;
 
 import static Competition.Commands.VisionCommand.stoneStatus.NONE;
 import static Competition.Commands.VisionCommand.stoneStatus.ONTARGET;
@@ -29,6 +32,10 @@ public class MechCommand extends BioCommand {
     private Gamepad manip, driver;
 
     BiohazardTele op;
+
+    Soundboard sound;
+
+    HardwareMap hw;
 
 
     //ROTATION STUFF
@@ -69,6 +76,8 @@ public class MechCommand extends BioCommand {
         manip = Robot.manipulator;
         driver = Robot.driver;
 
+        sound = new Soundboard(this.hw);
+
         lifttarg = lift.getCurrentPosition();
         rotationTarg = rotator.getCurrentPosition();
         liftPID.setup (42,0,42,0,0,lifttarg);
@@ -101,6 +110,8 @@ public class MechCommand extends BioCommand {
 
         moveRotation();
         //updateRotation();
+
+        playMusic();
 
     }
 
@@ -250,6 +261,25 @@ public class MechCommand extends BioCommand {
 
         rotator.setPower(rotPID.status(rotator.getCurrentPosition()));
 
+    }
+
+    public void playMusic () {
+        if (!driver.dpad_down) {
+            if (manip.y) {
+                sound.playSound(1, 0, true);
+            } else if (manip.b) {
+                sound.playSound(2, 0, true);
+            } else if (manip.a) {
+                sound.playSound(3, 0, true);
+            } else if (manip.x) {
+                sound.playSound(4, 0, true);
+            }
+        } else {
+            sound.playSound(1,0,false);
+            sound.playSound(2,0,false);
+            sound.playSound(3,0,false);
+            sound.playSound(4,0,false);
+        }
     }
 
     @Override
