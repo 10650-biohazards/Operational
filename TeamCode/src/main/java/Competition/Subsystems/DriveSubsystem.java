@@ -63,7 +63,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(stopTime);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
 
             //double mod = modPID.status(refine(gyro.getYaw()));
             double mod = 0;
@@ -101,7 +101,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(stopTime);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
 
             double mod = modPID.status(refine(gyro.getYaw()));
             double power = movePID.status(bright.getCurrentPosition());
@@ -143,7 +143,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(stopTime);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
 
             double power = -movePID.status(range.getDistance(DistanceUnit.INCH));
 
@@ -172,7 +172,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(stopTime);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double power = movePID.status(bright.getCurrentPosition());
             setPows(power, -power, -power, power);
 
@@ -188,7 +188,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(stopTime);
 
-        while (!u.timerDone()) {
+        while (!u.timerDone() && op.opModeIsActive()) {
             double power = pow;
             setPows(power, -power, -power, power);
 
@@ -208,7 +208,7 @@ public class DriveSubsystem extends BioSubsystem {
         boolean forward = !(initDiff < 0);
 
         boolean done = false;
-        while (!done) {
+        while (!done && op.opModeIsActive()) {
             if (forward) {
                 setPows(1, 1, 1, 1);
                 done = bright.getCurrentPosition() > target;
@@ -248,9 +248,9 @@ public class DriveSubsystem extends BioSubsystem {
 
         //u.waitMS(10000);
 
-        u.startTimer(5000);
+        u.startTimer(2000);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
 
             double power = movePID.status(currAng);
@@ -297,9 +297,9 @@ public class DriveSubsystem extends BioSubsystem {
 
         //u.waitMS(10000);
 
-        u.startTimer(5000);
+        u.startTimer(1500);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
 
             double power = movePID.status(currAng);
@@ -350,7 +350,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(4000);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
 
             double power = movePID.status(currAng);
@@ -406,7 +406,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         u.startTimer(30000);
 
-        while (!u.timerDone() && !movePID.done()) {
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
 
             double power = movePID.status(currAng);

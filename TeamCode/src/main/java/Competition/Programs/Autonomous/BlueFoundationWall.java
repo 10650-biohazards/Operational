@@ -51,8 +51,9 @@ public class BlueFoundationWall extends ExplosiveAuto {
         drive.moveRangePID(11, 5000, false);
         hooker.hook();
         u.waitMS(1000);
-        drive.moveStrafePow(1, 1800);
+        drive.moveStrafePow(0.7, 2000);
         hooker.release();
+        drive.moveTurnPID(87);
         drive.moveStraightPID(1000);
         drive.moveTurnPID(5);
         drive.moveStraightPID(300);

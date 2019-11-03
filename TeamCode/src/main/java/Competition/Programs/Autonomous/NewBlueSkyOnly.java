@@ -61,7 +61,7 @@ public class NewBlueSkyOnly extends ExplosiveAuto {
         if (skyPos == 2) {
             sound.PlaySkystoneSound(Soundboard.SkystoneSound.FIRSTSOUND);
             drive.moveRangePID(13, 3000, true);
-            drive.moveStrafePow(-0.7, 500);
+            drive.moveStrafePow(-0.7, 510);
             drive.moveTurnPID(90);
 
             intake.intake();
@@ -80,7 +80,7 @@ public class NewBlueSkyOnly extends ExplosiveAuto {
         } else if (skyPos == 1) {
             sound.PlaySkystoneSound(Soundboard.SkystoneSound.SECONDSOUND);
             drive.moveRangePID(18, 3000, true);
-            drive.moveStrafePow(-0.7, 500);
+            drive.moveStrafePow(-0.7, 510);
             drive.moveTurnPID(90);
 
             intake.intake();
@@ -99,7 +99,7 @@ public class NewBlueSkyOnly extends ExplosiveAuto {
         } else {
             sound.PlaySkystoneSound(Soundboard.SkystoneSound.THIRDSOUND);
             drive.moveRangePID(26, 3000, true);
-            drive.moveStrafePow(-0.7, 500);
+            drive.moveStrafePow(-0.7, 510);
             drive.moveTurnPID(90);
 
             intake.intake();

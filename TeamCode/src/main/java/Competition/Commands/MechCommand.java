@@ -184,7 +184,7 @@ public class MechCommand extends BioCommand {
 
     public void hooker() {
 
-            hooker.setPosition(-0.5 * manip.left_trigger + 1);
+            hooker.setPosition(-0.55 * manip.left_trigger + 1);
 
             op.telemetry.addData("hooker", hooker.getPosition());
             op.telemetry.update();

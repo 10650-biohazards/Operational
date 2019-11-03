@@ -75,7 +75,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:scaleType="fitXY"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:src="@drawable/yes2"
+      android:src="@drawable/icon_menu"
       android:background="@android:color/transparent"
       android:padding="1dp"
       android:adjustViewBounds="true"
@@ -155,7 +155,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:visibility="invisible"
       android:text="" />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/bacon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
@@ -166,6 +166,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:adjustViewBounds="true"
         android:visibility="visible"
         android:src="@drawable/mark" />
+        -->
 
 
     <FrameLayout

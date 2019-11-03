@@ -42,20 +42,20 @@ public class RedFoundationWall extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStrafePow(-1, 500);
+        drive.moveStrafePow(-1, 470);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(13, 5000, true);
+        drive.moveRangePID(15, 5000, true);
         hooker.hook();
         u.waitMS(1000);
-        drive.moveStrafePow(1, 1800);
-        drive.moveTurnFound(90);
+        drive.moveStrafePow(0.7, 2000);
+        drive.moveTurnFound(93);
         hooker.release();
         drive.moveStraightPID(-1000);
         drive.moveTurnPID(175);
         drive.moveStraightPID(-350);
         drive.moveTurnPID(90);
-        drive.moveStraightPID(1000, 1000);
+        drive.moveStraightPID(2000, 1000);
         drive.moveStraightPID(-200);
         drive.moveTurnPID(180);
         drive.moveStraightPID(1000, 2000);
