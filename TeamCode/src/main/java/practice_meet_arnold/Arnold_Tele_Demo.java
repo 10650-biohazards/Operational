@@ -29,8 +29,8 @@ public class Arnold_Tele_Demo extends OpMode {
                  D = 0.15;
 
     private double MIN_ENCODER_TARGET = -1350,
-                      MAX_ENCODER_TARGET = -60,
-                      ARM_ENCODER_TARGET_CHANGE_SPEED = 10;
+                   MAX_ENCODER_TARGET = -60,
+                   ARM_ENCODER_TARGET_CHANGE_SPEED = 10;
 
     final double SENSITIVITY = 0.75;
 
@@ -75,9 +75,9 @@ public class Arnold_Tele_Demo extends OpMode {
 
     private void set_servos() {
         h.jewelServo.setPosition(0.1);
-        if (gamepad2.dpad_left) {
+        if (gamepad1.dpad_left) {
             h.gripperServo.setPosition(0.45);
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad1.dpad_right) {
             h.gripperServo.setPosition(0.25);
         }
     }
@@ -92,17 +92,17 @@ public class Arnold_Tele_Demo extends OpMode {
     public void update_arm() {
         curr_arm_pos = h.topArm.getCurrentPosition();
 
-        if (gamepad2.a) {
+        if (gamepad1.a) {
             MAX_ENCODER_TARGET = curr_arm_pos;
         }
 
-        if (gamepad2.b) {
+        if (gamepad1.b) {
             MIN_ENCODER_TARGET = curr_arm_pos;
         }
 
-        if (gamepad2.dpad_down) {
+        if (gamepad1.dpad_down) {
             arm_encoder_target += ARM_ENCODER_TARGET_CHANGE_SPEED;
-        } else if (gamepad2.dpad_up) {
+        } else if (gamepad1.dpad_up) {
             arm_encoder_target -= ARM_ENCODER_TARGET_CHANGE_SPEED;
         }
 
@@ -143,7 +143,7 @@ public class Arnold_Tele_Demo extends OpMode {
             }
         }
 
-        if (gamepad2.right_stick_button) {
+        if (gamepad1.right_stick_button) {
             curr_arm_speed *= 1.4;
         }
 

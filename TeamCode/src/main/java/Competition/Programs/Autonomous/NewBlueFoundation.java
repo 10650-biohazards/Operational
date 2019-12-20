@@ -1,6 +1,7 @@
 package Competition.Programs.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import Competition.Robot;
 import Competition.RobotMap;
@@ -11,6 +12,7 @@ import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
 @Autonomous (name = "New Blue Foundation")
+@Disabled
 public class NewBlueFoundation extends ExplosiveAuto {
 
     DriveSubsystem drive;
@@ -43,14 +45,14 @@ public class NewBlueFoundation extends ExplosiveAuto {
         drive.moveStrafePow(-1, 500);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(14, 5000, false);
+        drive.moveRangePID(12, 5000, false);
         hooker.hook();
         u.waitMS(1000);
         drive.moveStrafePow(0.7, 1000);
         drive.moveTurnFound(5);
-        drive.moveStrafePow(-0.7, 1000);
+        drive.moveStrafePow(-0.7, 700);
         hooker.release();
-        drive.moveStrafePow(1, 1000);
+        drive.moveStrafePow(1, 800);
     }
 
     @Override

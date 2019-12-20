@@ -1,6 +1,7 @@
 package Competition.Programs.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import Competition.Robot;
 import Competition.RobotMap;
@@ -12,6 +13,7 @@ import DubinsCurve.myPoint;
 import FtcExplosivesPackage.ExplosiveAuto;
 
 @Autonomous(name = "Blue Skystone Only", group = "blue")
+@Disabled
 public class BlueSkyOnly extends ExplosiveAuto {
 
     DriveSubsystem drive;

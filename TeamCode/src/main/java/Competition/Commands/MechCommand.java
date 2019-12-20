@@ -12,13 +12,9 @@ import Competition.RobotMap;
 import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardTele;
 import Utilities.PID;
+import Utilities.Utility;
 
 import org.firstinspires.ftc.teamcode.Soundboard;
-
-import static Competition.Commands.VisionCommand.stoneStatus.NONE;
-import static Competition.Commands.VisionCommand.stoneStatus.ONTARGET;
-import static Competition.Commands.VisionCommand.stoneStatus.TILTLEFT;
-import static Competition.Commands.VisionCommand.stoneStatus.TILTRIGHT;
 
 
 public class MechCommand extends BioCommand {
@@ -27,7 +23,7 @@ public class MechCommand extends BioCommand {
 
     DcMotor intRight, intLeft, lift, rotator;
 
-    Servo swinger, gripper, hooker;
+    Servo swinger, gripper, hooker, theCooker, theBookie, leftTransfer, rightTransfer;
 
     private Gamepad manip, driver;
 
@@ -37,6 +33,9 @@ public class MechCommand extends BioCommand {
 
     HardwareMap hw;
 
+    Utility u;
+
+    boolean shuttleFirst, foundFirst;
 
     //ROTATION STUFF
     private final int VERTICAL = 42;
@@ -57,6 +56,7 @@ public class MechCommand extends BioCommand {
     public MechCommand(BiohazardTele op) {
         super(op, "mech");
         this.op = op;
+        u = new Utility(op);
     }
 
     @Override
@@ -70,6 +70,11 @@ public class MechCommand extends BioCommand {
         swinger = RobotMap.swinger;
         gripper = RobotMap.gripper;
         hooker = RobotMap.hooker;
+        theCooker = RobotMap.theCooker;
+        theBookie = RobotMap.theBooker;
+        leftTransfer = RobotMap.leftTransfer;
+        rightTransfer = RobotMap.rightTransfer;
+
         lift = RobotMap.lift;
         rotator = RobotMap.rotator;
 
@@ -98,21 +103,81 @@ public class MechCommand extends BioCommand {
     @Override
     public void loop() {
 
-        cairrage();
-        //intake();
+        //cairrage();
         hooker();
+        manualTransfer();
 
-        intake();
+        if (manip.a) {
+            rigInEm();
+            intake();
+        } else {
+            intake();
+            rigInEm();
+        }
 
-        adjTargLevel();
-        moveLift();
+        //adjTargLevel();
+        //moveLift();
         //updateLift();
 
-        moveRotation();
+        //moveRotation();
         //updateRotation();
 
-        playMusic();
+        //playMusic();
 
+        cookInEm();
+    }
+
+    private void manualTransfer() {
+        leftTransfer.setPosition(0.5 + (manip.left_stick_y / 2));
+        rightTransfer.setPosition(0.5 - (manip.left_stick_y / 2));
+    }
+
+    private void cookInEm() {
+        if (manip.left_bumper) {
+            theCooker.setPosition(0.5);
+        } else {
+            theCooker.setPosition(0);
+        }
+    }
+
+    private void rigInEm() {
+        if (manip.right_stick_y < -0.05) {
+
+            if (foundFirst) {
+                u.waitMS(30);
+                foundFirst = false;
+            }
+            theBookie.setPosition(0.0);
+        } else if (manip.a) {
+            //theBookie.setPosition(0.0);
+        } else {
+            theBookie.setPosition(0.2);
+            foundFirst = true;
+        }
+    }
+
+    public void intake() {
+
+        if (manip.right_stick_y > 0.05) {
+            intLeft.setPower(1);
+            intRight.setPower(1);
+        } else if (manip.right_stick_y < -0.05) {
+            intLeft.setPower(-1);
+            intRight.setPower(-1);
+        } else if (manip.a) {
+
+            if (shuttleFirst) {
+                //u.waitMS(230);
+                shuttleFirst = false;
+            }
+
+            intLeft.setPower(-0.3);
+            intRight.setPower(-0.3);
+        } else {
+            shuttleFirst = true;
+            intLeft.setPower(0);
+            intRight.setPower(0);
+        }
     }
 
     public void autoStack() {
@@ -135,51 +200,16 @@ public class MechCommand extends BioCommand {
     public void cairrage() {
 
         if (manip.x) {
-
             gripper.setPosition(0.3);
-
         } else {
-
             gripper.setPosition(0.7);
-
         }
 
         if (manip.b) {
-
             swinger.setPosition(0.35);
-
         } else {
-
             swinger.setPosition(0.05);
-
         }
-    }
-
-    public void intake() {
-
-        intLeft.setPower(manip.right_stick_y );
-        intRight.setPower(manip.right_stick_y);
-
-        /*if (VisionCommand.status == NONE) {
-            Log.e(TAG, "No stone in sight");
-            intLeft.setPower(0);
-            intRight.setPower(0);
-        }
-        if (VisionCommand.status == ONTARGET) {
-            Log.e(TAG, "On target!");
-            intLeft.setPower(1);
-            intRight.setPower(1);
-        }
-        if (VisionCommand.status == TILTRIGHT) {
-            Log.e(TAG, "Off course! Tilted to the right!");
-            intLeft.setPower(1);
-            intRight.setPower(0.8);
-        }
-        if (VisionCommand.status == TILTLEFT) {
-            Log.e(TAG, "Off course! Tilted to the left!");
-            intLeft.setPower(0.8);
-            intRight.setPower(1);
-        }*/
     }
 
     public void hooker() {

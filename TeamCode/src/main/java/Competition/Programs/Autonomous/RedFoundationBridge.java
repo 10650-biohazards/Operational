@@ -1,6 +1,7 @@
 package Competition.Programs.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import Competition.Robot;
 import Competition.RobotMap;
@@ -11,6 +12,7 @@ import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
 @Autonomous(name = "Red Foundation | Bridge Park", group = "red")
+@Disabled
 public class RedFoundationBridge extends ExplosiveAuto {
 
     DriveSubsystem drive;

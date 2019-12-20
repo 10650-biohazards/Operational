@@ -1,6 +1,7 @@
 package Gagarin;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import DubinsCurve.Node;
 import DubinsCurve.curveProcessor2;
@@ -10,6 +11,7 @@ import Utilities.Utility;
 import Utilities.driveTracker;
 
 @Autonomous(name = "Big Boy")
+@Disabled
 public class legalAuto extends ExplosiveAuto {
 
     private GagarinRobot robot;

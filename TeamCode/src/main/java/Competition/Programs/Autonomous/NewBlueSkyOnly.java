@@ -12,7 +12,9 @@ import Competition.Subsystems.IntakeSubsystem;
 import Competition.Subsystems.VisionSubsystem;
 import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
+import Utilities.PID;
 import Utilities.Utility;
+import VisionPipelines.OtherLineUpPipeline;
 
 @Autonomous(name = "New Blue Skystone Only", group = "blue")
 public class NewBlueSkyOnly extends ExplosiveAuto {
@@ -24,6 +26,8 @@ public class NewBlueSkyOnly extends ExplosiveAuto {
     curveProcessor3 curve;
     Soundboard sound;
     Utility u = new Utility(this);
+
+    PID turnPID = new PID();
 
     @Override
     public void initHardware() {
@@ -55,116 +59,164 @@ public class NewBlueSkyOnly extends ExplosiveAuto {
 
         hook.release();
 
-        drive.moveStraightPID(700);
-        drive.moveTurnPID(90);
+        drive.moveStraightPID(880);
 
         if (skyPos == 2) {
             sound.PlaySkystoneSound(Soundboard.SkystoneSound.FIRSTSOUND);
-            drive.moveRangePID(13, 3000, true);
-            drive.moveStrafePow(-0.7, 510);
-            drive.moveTurnPID(90);
+
+            OtherLineUpPipeline.lowerX = 110;
+            OtherLineUpPipeline.upperX = 130;
+
+            u.waitMS(1000);
+
+            DOTHEOTHERTHING(false);
+
+            u.waitMS(1000);
+
+            drive.moveStraightPID(200);
 
             intake.intake();
-            drive.moveStraightPID(300);
-
-            drive.moveStrafePow(0.7, 900);
+            drive.swingTurnPID(280, false);
+            drive.moveStraightPID(-350);
             intake.halt();
-            drive.moveTurnPID(90);
-            drive.moveStraightPID(-2700);
-            drive.moveTurnPID(5);
+
+            drive.moveStrafePow(-1, 450);
+
+            drive.moveTurnPID(273);
+            drive.moveStraightPID(1920);
             intake.outtake();
-            u.waitMS(500);
-            drive.moveTurnPID(90);
-            drive.moveStraightPID(600);
+            drive.moveStraightPID(-300);
             intake.halt();
         } else if (skyPos == 1) {
             sound.PlaySkystoneSound(Soundboard.SkystoneSound.SECONDSOUND);
-            drive.moveRangePID(18, 3000, true);
-            drive.moveStrafePow(-0.7, 510);
-            drive.moveTurnPID(90);
+            DOTHEOTHERTHING(true);
+            drive.moveStrafePow(0.4, 450);
 
             intake.intake();
-            drive.moveStraightPID(300);
-
-            drive.moveStrafePow(0.7, 900);
+            drive.swingTurnPID(280, false);
             intake.halt();
-            drive.moveTurnPID(90);
-            drive.moveStraightPID(-2300);
-            drive.moveTurnPID(5);
+            drive.moveTurnPID(270);
+            //drive.moveStraightPID(-250);
+
+            drive.moveStrafePow(-1, 450);
+
+            drive.moveTurnPID(270);
+            drive.moveStraightPID(1500);
             intake.outtake();
-            u.waitMS(500);
-            drive.moveTurnPID(90);
-            drive.moveStraightPID(500);
+            drive.moveStraightPID(-300);
             intake.halt();
         } else {
             sound.PlaySkystoneSound(Soundboard.SkystoneSound.THIRDSOUND);
-            drive.moveRangePID(26, 3000, true);
-            drive.moveStrafePow(-0.7, 510);
-            drive.moveTurnPID(90);
+            //DOTHEOTHERTHING(true);
+            //drive.moveStrafePow(-0.4, 100);
 
             intake.intake();
-            drive.moveStraightPID(300);
-
-            drive.moveStrafePow(0.7, 900);
+            drive.swingTurnPID(280, false);
             intake.halt();
-            drive.moveTurnPID(90);
-            drive.moveStraightPID(-2100);
-            drive.moveTurnPID(5);
+            drive.moveTurnPID(270);
+            drive.moveStraightPID(-150);
+
+            drive.moveStrafePow(-1, 480);
+
+            drive.moveTurnPID(275);
+            drive.moveStraightPID(1370);
             intake.outtake();
-            u.waitMS(500);
-            drive.moveTurnPID(90);
-            drive.moveStraightPID(500);
+            drive.moveStraightPID(-300);
             intake.halt();
         }
+    }
 
-        /*
-        waitForStart();
+    public void DOTHETHING() {
+        boolean done = false;
+        while (!done) {
+            double stoneY = vision.getStoneY();
+            double brp, frp, blp, flp;
 
-        int skyPos = vision.grabSkyPos();
+            if (stoneY == -1) {
 
-        //telemetry.addData("pos", skyPos);
-        //telemetry.update();
+                //OFF SCREEN
 
-        hook.release();
+                brp = 0.5;
+                frp = -0.5;
+                blp = -0.5;
+                flp = 0.5;
+            } else if (stoneY > 110) {
 
-        drive.moveStraightPID(700);
-        hook.skystone();
-        drive.moveTurnPID(90);
+                //OFF RIGHT
 
-        if (skyPos == 0) {
-            drive.moveRangePID(16, 3000, false);
-            drive.moveStrafePow(-0.7, 300);
-            hook.skystone();
-            u.waitMS(1000);
-            drive.swingTurnPID(135, true);
-            drive.moveStraightModded(1000, 4000);
-            drive.swingTurnSlow(90, false);
-            drive.moveStraightModded(750, 1000);
-            hook.release();
-            drive.moveStraightPID(-300);
-        } else if (skyPos == 1) {
-            drive.moveStrafePow(-0.7, 300);
-            hook.skystone();
-            u.waitMS(1000);
-            drive.swingTurnPID(135, true);
-            drive.moveStraightModded(1000, 4000);
-            drive.swingTurnSlow(90, false);
-            drive.moveStraightModded(300, 1000);
-            hook.release();
-            drive.moveStraightPID(-300);
-        } else {
-            drive.moveRangePID(8.5, 3000, false);
-            drive.moveStrafePow(-0.7, 300);
-            hook.skystone();
-            u.waitMS(1000);
-            //drive.swingTurnPID(100, false);
-            drive.swingTurnPID(135, true);
-            drive.moveStraightModded(700, 4000);
-            drive.swingTurnSlow(90, false);
-            drive.moveStraightModded(1100, 4000);
-            hook.release();
-            drive.moveStraightPID(-300);
-        }*/
+                brp = -0.5;
+                frp = 0.5;
+                blp = 0.5;
+                flp = -0.5;
+            } else if (stoneY < 90) {
+
+                //OFF LEFT
+
+                brp = 0.5;
+                frp = -0.5;
+                blp = -0.5;
+                flp = 0.5;
+            } else {
+                brp = 0;
+                frp = 0;
+                blp = 0;
+                flp = 0;
+            }
+
+            double mod = 0;
+            if (true) {
+                mod = turnPID.status(drive.gyro.getYaw());
+            }
+
+            setPows(brp + mod, frp + mod, blp - mod, flp - mod);
+        }
+    }
+
+    public void DOTHEOTHERTHING(boolean moveRight) {
+        double brp, frp, blp, flp;
+
+        while (opModeIsActive() && !vision.linedUp()) {
+            telemetry.addData("Lendd up", vision.linedUp());
+            telemetry.update();
+
+            if (moveRight) {
+                brp = -0.4;
+                frp = 0.4;
+                blp = 0.4;
+                flp = -0.4;
+            } else {
+                brp = 0.4;
+                frp = -0.4;
+                blp = -0.4;
+                flp = 0.4;
+            }
+
+            double mod = 0;
+            if (true) {
+                mod = turnPID.status(refine(drive.gyro.getYaw() + 90));
+            }
+
+            setPows(brp - mod, frp - mod, blp + mod, flp + mod);
+        }
+
+        setPows(0, 0, 0, 0);
+    }
+
+    public double refine(double input) {
+        input %= 360;
+        if (input < 0) {
+            input += 360;
+        }
+        return input;
+    }
+
+    private void setPows(double brp, double frp, double blp, double flp) {
+
+        drive.bright.setPower(brp);
+        drive.fright.setPower(frp);
+        drive.bleft.setPower(blp);
+        drive.fleft.setPower(flp);
+
     }
 
     @Override

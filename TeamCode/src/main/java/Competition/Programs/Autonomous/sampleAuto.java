@@ -2,6 +2,7 @@ package Competition.Programs.Autonomous;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import Competition.Robot;
 import Competition.RobotMap;
@@ -10,6 +11,7 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 
 @Autonomous(name = "Sample Auto")
+@Disabled
 public class sampleAuto extends ExplosiveAuto {
 
     DriveSubsystem drive;

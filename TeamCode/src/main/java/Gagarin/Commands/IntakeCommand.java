@@ -98,6 +98,10 @@ public class IntakeCommand extends Command {
             rRotator.setPosition(rRotator.getPosition() - INTAKE_MOVE_SPEED);
         }
 
+        op.telemetry.addData("Left", lRotator.getPosition());
+        op.telemetry.addData("Right", lRotator.getPosition());
+        op.telemetry.update();
+
 
 
         /*

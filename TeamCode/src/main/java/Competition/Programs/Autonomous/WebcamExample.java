@@ -38,6 +38,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import VisionPipelines.SkystonePipeline;
 
 @TeleOp(name = "Discord")
+@Disabled
 public class WebcamExample extends LinearOpMode {
     OpenCvCamera webcam;
 

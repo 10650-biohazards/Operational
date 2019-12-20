@@ -139,7 +139,7 @@ public class DriveSubsystem extends BioSubsystem {
             range = backRange;
         }
 
-        movePID.setup(0.012, 0, 0, 0.1, 0.1, target);
+        movePID.setup(0.012, 0, 0, 0.1, 0.16, target);
 
         u.startTimer(stopTime);
 
@@ -223,7 +223,7 @@ public class DriveSubsystem extends BioSubsystem {
     }
 
 
-    public void moveTurnPID(double targetAng) {
+    public void moveTurnPID(double targetAng, int stopTime) {
         double mod = 0;
 
         double curr = refine(gyro.getYaw());
@@ -248,7 +248,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         //u.waitMS(10000);
 
-        u.startTimer(2000);
+        u.startTimer(stopTime);
 
         while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
@@ -270,6 +270,9 @@ public class DriveSubsystem extends BioSubsystem {
         }
         setPows(0, 0, 0, 0);
         u.waitMS(200);
+    }
+    public void moveTurnPID(double targetAng) {
+        moveTurnPID(targetAng, 2000);
     }
 
     public void moveTurnFound(double targetAng) {
@@ -297,7 +300,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         //u.waitMS(10000);
 
-        u.startTimer(1500);
+        u.startTimer(3000);
 
         while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
@@ -346,9 +349,9 @@ public class DriveSubsystem extends BioSubsystem {
         }
 
         PID movePID = new PID();
-        movePID.setup(0.02, 0, 0, 0.1, 0.2, refine(targetAng + mod));
+        movePID.setup(0.008, 0, 0, 0.1, 0.2, refine(targetAng + mod));
 
-        u.startTimer(4000);
+        u.startTimer(2500);
 
         while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
             double currAng = refine(gyro.getYaw() + mod);
@@ -436,12 +439,69 @@ public class DriveSubsystem extends BioSubsystem {
     public double refine(double input) {
         input %= 360;
         if (input < 0) {
-            input =+ 360;
+            input += 360;
         }
         return input;
     }
 
+    private static double refine_ang(double ang) {
+        ang %= 360;
+        ang += ang < 0 ? 360 : 0;
+        return ang;
+    }
 
+    private static double torads(double ang) {
+        return ang * (Math.PI / 180);
+    }
+
+    public void auto_omni(double targetAng, double power, int time) {
+        u.startTimer(time);
+
+        while (!u.timerDone()) {
+            omni_drive(targetAng, power);
+        }
+
+        setPows(0, 0, 0, 0);
+        u.waitMS(200);
+    }
+
+    public void omni_drive(double targetang, double power) {
+        double refinedAng;
+        double aAng;
+        double bAng;
+
+        double aPowrr;
+        double bPowrr;
+
+        targetang = refine_ang(targetang);
+
+        refinedAng = refine_ang(gyro.getYaw());
+        refinedAng = targetang - refinedAng;
+        refinedAng = refine_ang(refinedAng);
+
+
+        System.out.println(refinedAng);
+
+
+        aAng = refinedAng + 45;
+        bAng = refinedAng - 45;
+
+        if ((refinedAng < 90 && refinedAng > 0) || (refinedAng < 270 && refinedAng > 180)) {
+            aPowrr = refinedAng < 90 ? 1 : -1;
+            bPowrr = Math.cos(torads(aAng)) / Math.cos(torads(bAng));
+            bPowrr *= refinedAng > 180 ? -1 : 1;
+        } else {
+            aPowrr = -Math.cos(torads(bAng)) / Math.cos(torads(aAng));
+            aPowrr *= refinedAng > 270 ? -1 : 1;
+            bPowrr = refinedAng < 180 ? -1 : 1;
+        }
+
+        aPowrr *= power;
+        bPowrr *= power;
+        setPows(bPowrr, aPowrr, aPowrr, bPowrr);
+        op.telemetry.addData("aAngle", aAng);
+        op.telemetry.addData("bAngle", bAng);
+    }
 
     public void setPows(double brp, double frp, double blp, double flp) {
         bright.setPower(brp);
