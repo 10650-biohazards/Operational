@@ -52,6 +52,11 @@ public class PID {
 
     public double status(double inputValue) {
         e = tarVal - inputValue;
+        if (e>180){
+            e = tarVal - 360 - inputValue;
+        } else if(e<-180){
+            e = tarVal + 360 - inputValue;
+        }
 
         timeD = System.currentTimeMillis()- oldTime;
 

@@ -6,11 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import java.util.Base64;
+
 import Competition.RobotMap;
 import DubinsCurve.Node;
 import DubinsCurve.myPoint;
 import FtcExplosivesPackage.BioSubsystem;
 import FtcExplosivesPackage.BiohazardNavX;
+import FtcExplosivesPackage.ToxinFieldBasedControl;
 import Utilities.PID;
 import Utilities.Utility;
 import Utilities.driveTracker2;
@@ -25,6 +28,8 @@ public class DriveSubsystem extends BioSubsystem {
     ModernRoboticsI2cRangeSensor frontRange, backRange;
 
     public driveTracker2 track;
+
+    public double ratioProgress;
 
     public DriveSubsystem(LinearOpMode op) {
         super(op);
@@ -433,15 +438,142 @@ public class DriveSubsystem extends BioSubsystem {
         u.waitMS(200);
     }
 
+    public void complexMove(int moveDist, //time
+                            double moveHeadingStart,
+                            double moveHeadingEnd,
+                            double robotHeadingStart,
+                            double robotHeadingEnd,
+                            double startSpeed,
+                            double endSpeed,
+                            boolean stop,
+                            double P) {
+
+        int isNegativeDist = 1;
+
+        if (moveDist < 0) isNegativeDist = -1;
+
+        double currTime = 0.0;
+
+        double initTime = System.currentTimeMillis();
+
+        double tickPerCm = 3.667;
+
+        PID headingPID = new PID();
+
+        double brInitPos = bright.getCurrentPosition();
+        double frInitPos = fright.getCurrentPosition();
+        double blInitPos = bleft.getCurrentPosition();
+        double flInitPos = fleft.getCurrentPosition();
+
+        double brDifPos = 0;
+        double frDifPos = 0;
+        double blDifPos = 0;
+        double flDifPos = 0;
+
+        double lastGyro = gyro.getYaw();
+
+        double lastTime = System.currentTimeMillis();
+
+//        headingPID.setup(10,0, 0.5, 0, 0 , 0);
+        headingPID.setup(P,0.0,0.0,0.0,0.0,0.0);
+
+        while (true) {
+
+            brDifPos = bright.getCurrentPosition() - brInitPos;
+            frDifPos = fright.getCurrentPosition() - frInitPos;
+            blDifPos = bleft.getCurrentPosition() - blInitPos;
+            flDifPos = fleft.getCurrentPosition() - flInitPos;
+
+            brInitPos = bright.getCurrentPosition();
+            frInitPos = fright.getCurrentPosition();
+            blInitPos = bleft.getCurrentPosition();
+            flInitPos = fleft.getCurrentPosition();
+
+//            currDistance += Math.max(Math.max(Math.abs(brDifPos), Math.abs(frDifPos)), Math.max(Math.abs(blDifPos), Math.abs(flDifPos)))/tickPerCm;
+
+            currTime = System.currentTimeMillis() - initTime;
+
+            ratioProgress = currTime/Math.abs(moveDist);
+
+            double shouldBeMoveAngle = ratioProgress * moveHeadingEnd + (1.0 - ratioProgress) * moveHeadingStart;
+
+            double shouldBeRobotAngle = ratioProgress * robotHeadingEnd + (1.0 - ratioProgress) * robotHeadingStart;//not working
+
+            double speed = isNegativeDist*(ratioProgress * endSpeed + (1.0 - ratioProgress) * startSpeed);//not working
+
+            double desiredTurnRate = ratioProgress * (robotHeadingEnd/moveDist) + (1.0 - ratioProgress) * (robotHeadingEnd-gyro.getYaw())/(moveDist-currTime);
+
+            double currTurnRate = (gyro.getYaw()-lastGyro)/(currTime-lastTime);
+
+            lastGyro = gyro.getYaw();
+
+            lastTime = currTime;
+
+            headingPID.adjTarg(shouldBeRobotAngle/*desiredTurnRate*/);
+
+            double angAdjPow =  headingPID.status(gyro.getYaw()/*currTurnRate*/);
+
+            double straightSpeed = speed*Math.cos(Math.toRadians(gyro.getYaw())-shouldBeMoveAngle);
+
+            double strafeSpeed = speed*Math.sin(Math.toRadians(gyro.getYaw())-shouldBeMoveAngle);
+
+            double brightPower = -strafeSpeed + straightSpeed;
+            double frightPower = +strafeSpeed + straightSpeed;
+            double bleftPower   = +strafeSpeed + straightSpeed;
+            double fleftPower  = -strafeSpeed + straightSpeed;
+
+            double scaleAdjust = ScaleAdjustment(brightPower,frightPower,bleftPower,fleftPower,speed);
+
+            brightPower *= scaleAdjust;
+            frightPower *= scaleAdjust;
+            bleftPower *= scaleAdjust;
+            fleftPower *= scaleAdjust;
+
+            setPows(brightPower - angAdjPow,frightPower - angAdjPow,bleftPower + angAdjPow,fleftPower + angAdjPow);
+
+            track.refresh();
+
+            if (!op.opModeIsActive()) return;
+
+            if (ratioProgress >= 1) break;
+
+            op.telemetry.addData("Current Time",currTime);
+            op.telemetry.addData("Progress",ratioProgress);
+            op.telemetry.addData("bleft encoder", bleft.getCurrentPosition());
+            op.telemetry.update();
+
+
+        }
+        if (stop) setPows(-0.05, -0.05, -0.05, -0.05);
+    }
+
+
+
     public double refine(double input) {
         input %= 360;
         if (input < 0) {
-            input =+ 360;
+            input += 360;
         }
         return input;
     }
 
 
+    private double ScaleAdjustment(double a, double b, double c, double d, double maxValue){
+
+        double largestValue = Math.max(Math.max(Math.abs(a), Math.abs(b)) ,Math.max(Math.abs(c),Math.abs(d)));
+        double adjustment;
+        if(largestValue > Math.abs(maxValue)){
+
+            adjustment = Math.abs(maxValue)/largestValue;
+
+        } else {
+
+            adjustment = 1;
+
+        }
+
+        return adjustment;
+    }
 
     public void setPows(double brp, double frp, double blp, double flp) {
         bright.setPower(brp);
