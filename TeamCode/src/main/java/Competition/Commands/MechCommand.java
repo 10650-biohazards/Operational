@@ -27,7 +27,7 @@ public class MechCommand extends BioCommand {
 
     DcMotor intRight, intLeft, lift, rotator;
 
-    Servo swinger, gripper, hooker;
+    Servo swinger, gripper, hooker, booker;
 
     private Gamepad manip, driver;
 
@@ -70,6 +70,7 @@ public class MechCommand extends BioCommand {
         swinger = RobotMap.swinger;
         gripper = RobotMap.gripper;
         hooker = RobotMap.hooker;
+        booker = RobotMap.booker;
         lift = RobotMap.lift;
         rotator = RobotMap.rotator;
 
@@ -102,6 +103,8 @@ public class MechCommand extends BioCommand {
         //intake();
         hooker();
 
+        booker();
+
         intake();
 
         adjTargLevel();
@@ -111,7 +114,9 @@ public class MechCommand extends BioCommand {
         moveRotation();
         //updateRotation();
 
-        playMusic();
+
+
+        //playMusic();
 
     }
 
@@ -188,6 +193,11 @@ public class MechCommand extends BioCommand {
 
             op.telemetry.addData("hooker", hooker.getPosition());
             op.telemetry.update();
+    }
+
+    public void booker() {
+        booker.setPosition(0.7-(1-manip.right_trigger) * 0.4);
+
     }
 
     public void adjTargLevel() {

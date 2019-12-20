@@ -256,6 +256,10 @@ public class DriveCommand extends BioCommand {
         }
     }
 
+    public void ControllerEmergency (){
+
+    }
+
     private void setPows(double brp, double frp, double blp, double flp) {
 
         bright.setPower(brp);

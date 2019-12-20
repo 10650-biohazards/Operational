@@ -12,7 +12,7 @@ import FtcExplosivesPackage.BiohazardNavX;
 
 public class RobotMap {
     public static DcMotor bright, fright, bleft, fleft, intLeft, intRight, lift, rotator;
-    public static Servo gripper, swinger, hooker;
+    public static Servo gripper, swinger, hooker, booker;
     public static BiohazardNavX gyro;
     public static WebcamName stoneCam;
     public static ModernRoboticsI2cRangeSensor frontRange, backRange;
@@ -42,6 +42,7 @@ public class RobotMap {
         gripper = hw.get(Servo.class, "firm grasp");
         swinger = hw.get(Servo.class, "ragtime");
         hooker = hw.get(Servo.class, "hooker");
+        booker = hw.get(Servo.class,"booker");
 
         frontRange = hw.get(ModernRoboticsI2cRangeSensor.class, "frontRange");
         backRange = hw.get(ModernRoboticsI2cRangeSensor.class, "backRange");
