@@ -3,6 +3,7 @@ package Competition.Subsystems;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -145,20 +146,24 @@ public class DriveSubsystem extends BioSubsystem {
 
         while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
 
-            double power = -movePID.status(range.getDistance(DistanceUnit.INCH));
+            if (range.getDistance(DistanceUnit.INCH) == 0.0) {
+                setPows(0, 0, 0, 0);
+            } else {
+                double power = -movePID.status(range.getDistance(DistanceUnit.INCH));
 
-            if (!front) {
-                power *= -1;
+                if (!front) {
+                    power *= -1;
+                }
+
+                op.telemetry.addData("POWER", power);
+                op.telemetry.addData("Dist", range.getDistance(DistanceUnit.INCH));
+                op.telemetry.addData("Target", target);
+                op.telemetry.update();
+
+                setPows(power, power, power, power);
+
+                track.refresh();
             }
-
-            op.telemetry.addData("POWER", power);
-            op.telemetry.addData("Dist", range.getDistance(DistanceUnit.INCH));
-            op.telemetry.addData("Target", target);
-            op.telemetry.update();
-
-            setPows(power, power, power, power);
-
-            track.refresh();
 
             if (!op.opModeIsActive()) return;
         }
