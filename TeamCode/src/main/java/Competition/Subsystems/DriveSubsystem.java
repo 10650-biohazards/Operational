@@ -23,7 +23,7 @@ public class DriveSubsystem extends BioSubsystem {
     LinearOpMode op;
     public BiohazardNavX gyro;
 
-    ModernRoboticsI2cRangeSensor frontRange, backRange;
+    ModernRoboticsI2cRangeSensor frontRange, backRange, sideRange;
 
     public driveTracker2 track;
 
@@ -171,6 +171,63 @@ public class DriveSubsystem extends BioSubsystem {
         u.waitMS(200);
     }
 
+    public void moveStrafeRange(double targDist, int stopTime, boolean foundation) {
+        PID movePID = new PID();
+        PID modPID = new PID();
+
+        double target = targDist;
+
+        if (foundation) movePID.setup(0.04, 0, 0, 0.1, 0.16, target);
+        else movePID.setup(0.012, 0, 0, 0.1, 0.16, target);
+
+        modPID.setup(0.02, 0, 0, 0, 0, 90);
+
+        u.startTimer(stopTime);
+
+        while (!u.timerDone() && !movePID.done() && op.opModeIsActive()) {
+
+            if (sideRange.getDistance(DistanceUnit.INCH) == 0.0) {
+                setPows(0, 0, 0, 0);
+            } else {
+                double power = -movePID.status(sideRange.getDistance(DistanceUnit.INCH));
+                double mod = modPID.status(refine(gyro.getYaw()));
+
+                op.telemetry.addData("POWER", power);
+                op.telemetry.addData("Dist", sideRange.getDistance(DistanceUnit.INCH));
+                op.telemetry.addData("Target", target);
+                op.telemetry.update();
+
+                setPows(power - mod, -power - mod, -power + mod, power + mod);
+
+                track.refresh();
+            }
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
+        u.waitMS(200);
+    }
+
+    public void moveStrafeMod(double pow, int stopTime) {
+        PID modPID = new PID();
+        modPID.setup(0.02, 0, 0, 0, 0, 90);
+
+        u.startTimer(stopTime);
+
+        while (!u.timerDone() && op.opModeIsActive()) {
+            double power = pow;
+            double mod = modPID.status(refine(gyro.getYaw()));
+
+            setPows(power - mod, -power - mod, -power + mod, power + mod);
+
+            track.refresh();
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
+        u.waitMS(500);
+    }
+
     public void moveStrafePID(double targDist, int stopTime) {
         PID movePID = new PID();
         movePID.setup(0.0002, 0, 0, 0.2, 20,bright.getCurrentPosition() + targDist);
@@ -217,7 +274,16 @@ public class DriveSubsystem extends BioSubsystem {
             if (forward) {
                 setPows(1, 1, 1, 1);
                 done = bright.getCurrentPosition() > target;
-            } else
+            } else {
+                setPows(-1, -1, -1, -1);
+                done = bright.getCurrentPosition() < target;
+            }
+
+            op.telemetry.addData("ENCODER", bright.getCurrentPosition());
+            op.telemetry.addData("TARGET", target);
+            op.telemetry.addData("DONE", done);
+            op.telemetry.addData("FORWARD", forward);
+            op.telemetry.update();
 
             track.refresh();
 
@@ -526,6 +592,7 @@ public class DriveSubsystem extends BioSubsystem {
 
         frontRange = RobotMap.frontRange;
         backRange = RobotMap.backRange;
+        sideRange = RobotMap.sideRange;
     }
 
     @Override

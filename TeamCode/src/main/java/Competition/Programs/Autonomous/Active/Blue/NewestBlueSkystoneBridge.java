@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active.Blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -16,8 +16,8 @@ import Utilities.PID;
 import Utilities.Utility;
 import VisionPipelines.LineUpPipeline;
 
-@Autonomous(name = "Red Skystone | Wall Park", group = "red")
-public class RedSkystoneWall extends ExplosiveAuto {
+@Autonomous(name = "Blue Skystone | Bridge Park", group = "blue")
+public class NewestBlueSkystoneBridge extends ExplosiveAuto {
 
     DriveSubsystem drive;
     VisionSubsystem vision;
@@ -70,19 +70,19 @@ public class RedSkystoneWall extends ExplosiveAuto {
         if (skyPos == 0) {
 
             drive.moveTurnPID(90);
-            drive.moveRangePID(22, 2000, false);
-            drive.moveRangePID(22, 2000, false);
+            drive.moveRangePID(30, 2000, true);
+            drive.moveRangePID(30, 2000, true);
             //drive.moveStraightPID(100);
             drive.moveStrafePow(-0.5, 500);
             hook.grabSkystone();
             u.waitMS(500);
             drive.moveStrafePow(0.5, 1000);
             drive.moveTurnPID(90);
-            drive.moveStraightModded(1900, 5000);
+            drive.moveStraightModded(-1600, 5000);
             hook.releaseSkystone();
 
             //SINGLE
-            drive.moveStraightPID(-600);
+            drive.moveStraightPID(600);
 
             /* DOUBLE SKYSTONE
             drive.moveTurnPID(90);
@@ -95,38 +95,40 @@ public class RedSkystoneWall extends ExplosiveAuto {
 
         } else if (skyPos == 1) {
             drive.moveTurnPID(90);
-            drive.moveRangePID(30, 2000, false);
-            drive.moveRangePID(30, 2000, false);
+            drive.moveRangePID(22.5, 2000, true);
+            drive.moveRangePID(22.5, 2000, true);
             //drive.moveStraightPID(100);
             drive.moveStrafePow(-0.5, 500);
             hook.grabSkystone();
             u.waitMS(500);
             drive.moveStrafePow(0.5, 1000);
             drive.moveTurnPID(90);
-            drive.moveStraightModded(1600, 5000);
+            drive.moveStraightModded(-1850, 5000);
             hook.releaseSkystone();
 
             //SINGLE
-            drive.moveStraightPID(-600);
+            drive.moveStraightPID(600);
 
         } else {
             drive.moveTurnPID(90);
-            drive.moveRangePID(36.5, 2000, false);
-            drive.moveRangePID(36.5, 2000, false);
+            drive.moveRangePID(16.5, 2000, true);
+            drive.moveRangePID(16.5, 2000, true);
             //drive.moveStraightPID(100);
             drive.moveStrafePow(-0.5, 500);
             hook.grabSkystone();
+            telemetry.addData("YEET", RobotMap.skyGrabber.getPosition());
+            telemetry.update();
             u.waitMS(500);
             drive.moveStrafePow(0.5, 1000);
             drive.moveTurnPID(90);
-            drive.moveStraightModded(1200, 5000);
+            drive.moveStraightModded(-2000, 5000);
             hook.releaseSkystone();
 
             //SINGLE
-            drive.moveStraightPID(-600);
+            drive.moveStraightPID(600);
         }
 
-        drive.moveStrafePow(0.4, 1000);
+        drive.moveStrafePow(-0.4, 1000);
     }
 
     public void DOTHETHING(boolean moveRight, double targAng) {

@@ -2,32 +2,35 @@ package Competition.Programs.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
 import Competition.Commands.DriveCommand;
 import Competition.Commands.MechCommand;
 import Competition.Commands.VisionCommand;
 import Competition.Robot;
 import Competition.RobotMap;
 import FtcExplosivesPackage.BiohazardTele;
+import VisionPipelines.IntakePipeline;
 
 @TeleOp(name = "Meet 1 TeleOp")
-public class RealTele extends BiohazardTele {
+public class VisionCommandTest extends BiohazardTele {
 
-    DriveCommand drive;
-    MechCommand mech;
     VisionCommand vision;
+
+    OpenCvCamera phoneCam;
 
     @Override
     public void initHardware() {
         RobotMap robotMap = new RobotMap(hardwareMap);
         Robot robot = new Robot(this, true);
 
-        drive = new DriveCommand(this);
-        mech = new MechCommand(this);
-        vision = new VisionCommand(this, hardwareMap);
-
-        drive.enable();
-        mech.enable();
-        vision.enable();
+        int cameraMonitorViewId2 = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId2", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId2);
+        phoneCam.openCameraDevice();
+        phoneCam.setPipeline(new IntakePipeline());
+        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
 
     @Override

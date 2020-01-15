@@ -1,6 +1,9 @@
 package Competition.Commands;
 
 
+import android.util.Log;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -8,23 +11,29 @@ import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardTele;
 import Utilities.PID;
 import VisionPipelines.FetchPipeline;
+import VisionPipelines.IntakePipeline;
+import VisionPipelines.OtherLineUpPipeline;
 import VisionPipelines.SkystonePipeline;
 import VisionPipelines.StackPipeline;
 
 public class VisionCommand extends BioCommand {
+    private static String TAG = "VisionCommand";
 
     HardwareMap hw;
 
     stackStatus currStack;
+    static stoneStatus intakeStatus = stoneStatus.NONE;
+    static double stoneY;
 
     OpenCvCamera intakeCam;
-    OpenCvCamera liftCam;
+    OpenCvCamera phoneCam;
 
     PID turnPID = new PID();
 
@@ -32,8 +41,11 @@ public class VisionCommand extends BioCommand {
     public static boolean fetchOnScreen;
     public static Point fetchLoc;
 
+    OpMode op;
+
     public VisionCommand(BiohazardTele op, HardwareMap hw) {
         super(op, "vision");
+        this.op = op;
         this.hw = hw;
     }
 
@@ -46,10 +58,10 @@ public class VisionCommand extends BioCommand {
         intakeCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
         int cameraMonitorViewId2 = hw.appContext.getResources().getIdentifier("cameraMonitorViewId2", "id", hw.appContext.getPackageName());
-        liftCam = new OpenCvWebcam(hw.get(WebcamName.class, "stoned cam"), cameraMonitorViewId2);
-        liftCam.openCameraDevice();
-        liftCam.setPipeline(new StackPipeline());
-        liftCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        phoneCam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId2);
+        phoneCam.openCameraDevice();
+        phoneCam.setPipeline(new IntakePipeline());
+        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
 
         turnPID.setup(0.05, 0, 0, 0, 0.5, 0);
@@ -64,7 +76,7 @@ public class VisionCommand extends BioCommand {
     public void loop() {
         intakeVision();
         //if (Robot.driver.a) {
-        stackVision();
+        //stackVision();
         //}
 
     }
@@ -88,6 +100,34 @@ public class VisionCommand extends BioCommand {
 
     public void intakeVision() {
 
+        if (IntakePipeline.stoneRect != null) stoneY = IntakePipeline.stoneRect.mid().y;
+
+        boolean right = IntakePipeline.rightPresent, center = IntakePipeline.centPresent, left = IntakePipeline.leftPresent;
+
+        op.telemetry.addData("Center ", center);
+        op.telemetry.addData("Left ", left);
+        op.telemetry.addData("Right ", right);
+
+        if (center && !right && !left) {
+            intakeStatus = stoneStatus.ONTARGET;
+            op.telemetry.addData("TARGET ACQUIRED. SEEK AND DESTROY!", "");
+        } else if (center && right && !left) {
+            intakeStatus = stoneStatus.TILTRIGHT;
+            op.telemetry.addData("SLIGHT RIGHT", "");
+        } else if (center && !right && left) {
+            intakeStatus = stoneStatus.TILTLEFT;
+            op.telemetry.addData("SLIGHT LEFT", "");
+        } else if (!center && right && !left) {
+            intakeStatus = stoneStatus.FARRIGHT;
+            op.telemetry.addData("FAR RIGHT", "");
+        } else if (!center && !right && left) {
+            intakeStatus = stoneStatus.FARLEFT;
+            op.telemetry.addData("FAR LEFT", "");
+        } else {
+            intakeStatus = stoneStatus.NONE;
+            op.telemetry.addData("NO TARGET IN SIGHT", "");
+        }
+        op.telemetry.update();
     }
 
     public void fetchVision() {
@@ -125,7 +165,9 @@ public class VisionCommand extends BioCommand {
         NONE,
         ONTARGET,
         TILTRIGHT,
-        TILTLEFT
+        TILTLEFT,
+        FARRIGHT,
+        FARLEFT
     }
 
     public enum stackStatus {

@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active.Red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -16,8 +16,8 @@ import Utilities.PID;
 import Utilities.Utility;
 import VisionPipelines.LineUpPipeline;
 
-@Autonomous(name = "Red Skystone | Bridge Park", group = "red")
-public class RedSkystoneBridge extends ExplosiveAuto {
+@Autonomous(name = "Red Skystone | Wall Park", group = "red")
+public class RedSkystoneWall extends ExplosiveAuto {
 
     DriveSubsystem drive;
     VisionSubsystem vision;
@@ -71,7 +71,6 @@ public class RedSkystoneBridge extends ExplosiveAuto {
 
             drive.moveTurnPID(90);
             drive.moveRangePID(22, 2000, false);
-            drive.moveRangePID(22, 2000, false);
             //drive.moveStraightPID(100);
             drive.moveStrafePow(-0.5, 500);
             hook.grabSkystone();
@@ -82,16 +81,20 @@ public class RedSkystoneBridge extends ExplosiveAuto {
             hook.releaseSkystone();
 
             //SINGLE
-            drive.moveStraightPID(-600);
+            //drive.moveStraightPID(-600);
 
-            /* DOUBLE SKYSTONE
+            //DOUBLE SKYSTONE
             drive.moveTurnPID(90);
-            drive.moveStraightPID(-3000);
-            drive.moveTurnPID(90);
-            drive.moveStrafePow(-0.5, 500);
+            //drive.moveStraightPID(-2500);
+            drive.moveStraightRaw(-1000);
+            drive.moveRangePID(0, 1000, false);
+            drive.moveStrafeMod(-0.5, 1000);
             hook.grabSkystone();
-            u.waitMS(500);
-             */
+            u.waitMS(400);
+            drive.moveStrafeRange(4, 2000, false);
+            drive.moveStraightModded(2700, 5000);
+            hook.releaseSkystone();
+            drive.moveStraightPID(-500);
 
         } else if (skyPos == 1) {
             drive.moveTurnPID(90);
@@ -126,7 +129,7 @@ public class RedSkystoneBridge extends ExplosiveAuto {
             drive.moveStraightPID(-600);
         }
 
-        drive.moveStrafePow(-0.4, 1000);
+        drive.moveStrafePow(0.4, 1000);
     }
 
     public void DOTHETHING(boolean moveRight, double targAng) {

@@ -1,7 +1,6 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active.Red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import Competition.Robot;
 import Competition.RobotMap;
@@ -11,9 +10,8 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous(name = "Red Foundation | Bridge Park", group = "red")
-@Disabled
-public class RedFoundationBridge extends ExplosiveAuto {
+@Autonomous (name = "New Red Foundation | Bridge Park", group = "red")
+public class NewRedFoundationBridge extends ExplosiveAuto {
 
     DriveSubsystem drive;
     HookSubsystem hooker;
@@ -42,25 +40,21 @@ public class RedFoundationBridge extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStrafePow(-1, 500);
-        drive.moveTurnPID(90);
-        drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(14, 5000, true);
+        drive.moveStraightPID(300);
+        drive.moveStrafeMod(-0.3, 2800);
+        //drive.moveStrafePow(-1, 500);
+        //drive.moveTurnPID(90);
+        //drive.moveStrafePow(-0.4, 500);
+        drive.moveRangePID(15, 5000, true);
         hooker.hook();
         u.waitMS(1000);
-        drive.moveStrafePow(0.7, 2000);
-        drive.moveTurnFound(90);
+        drive.moveStrafeRange(6, 5000, true);
+        //drive.moveStrafePow(0.7, 1100);
+        drive.moveTurnFound(180);
+        drive.moveStrafePow(-0.7, 1200);
         hooker.release();
-        drive.moveStraightPID(-1000);
-        drive.moveTurnPID(175);
-        drive.moveStraightPID(-350);
-        drive.moveTurnPID(90);
-        drive.moveStraightPID(1000, 1000);
-        drive.moveStraightPID(-200);
-        drive.moveTurnPID(180);
-        drive.moveRangePID(26, 5000, true);
-        drive.moveTurnPID(270);
-        drive.moveStraightPID(600);
+        drive.moveRangePID(20, 1000, true);
+        drive.moveStrafePow(1, 700);
     }
 
     @Override

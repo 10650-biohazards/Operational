@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Legacy.Blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -11,15 +11,13 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous(name = "Blue Foundation Only | Wall Park", group = "blue")
+@Autonomous (name = "New Blue Foundation")
 @Disabled
-public class BlueFoundationWall extends ExplosiveAuto {
+public class NewBlueFoundation extends ExplosiveAuto {
 
     DriveSubsystem drive;
-    //VisionSubsystem vision;
     HookSubsystem hooker;
     curveProcessor3 curve;
-
     Utility u = new Utility(this);
 
     @Override
@@ -28,11 +26,10 @@ public class BlueFoundationWall extends ExplosiveAuto {
         Robot robot = new Robot(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(-1, -3, 90);
+        Robot.track.setCurrentNode(1, -3, 90);
         RobotMap.gyro.startAng = 90;
 
         drive = Robot.drive;
-        //vision = Robot.vision;
         hooker = Robot.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
@@ -45,28 +42,17 @@ public class BlueFoundationWall extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-
-
         drive.moveStrafePow(-1, 500);
         drive.moveTurnPID(90);
         drive.moveStrafePow(-0.5, 300);
-        drive.moveRangePID(11, 5000, false);
+        drive.moveRangePID(12, 5000, false);
         hooker.hook();
         u.waitMS(1000);
-        drive.moveStrafePow(0.7, 2000);
+        drive.moveStrafePow(0.7, 1000);
+        drive.moveTurnFound(5);
+        drive.moveStrafePow(-0.7, 700);
         hooker.release();
-        drive.moveTurnPID(87);
-        drive.moveStraightPID(1000);
-        drive.moveTurnPID(5);
-        drive.moveStraightPID(300);
-        drive.moveTurnPID(270);
-        drive.moveStraightPID(1000, 1000);
-        drive.moveStraightPID(-200);
-        drive.moveTurnPID(180);
-        drive.moveStraightPID(2000, 2000);
-        drive.moveStraightPID(-100);
-        drive.moveTurnPID(90);
-        drive.moveStraightPID(400);
+        drive.moveStrafePow(1, 800);
     }
 
     @Override

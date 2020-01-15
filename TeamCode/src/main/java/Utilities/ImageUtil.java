@@ -321,4 +321,5 @@ public class ImageUtil {
   public static myRect rectToMyRect(Rect input) {
     return new myRect(input.br(), input.tl());
   }
+  public static Rect myRectToRect(myRect input) { return new Rect(input.br(), input.tl()); }
 }

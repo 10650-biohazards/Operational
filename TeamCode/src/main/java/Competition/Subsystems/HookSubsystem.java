@@ -20,7 +20,7 @@ public class HookSubsystem extends Subsystem {
     public void enable() {
         hooker = RobotMap.hooker;
         skyGrabber = RobotMap.skyGrabber;
-        RobotMap.theBooker.setPosition(0.55);
+        RobotMap.theBooker.setPosition(0.67);
     }
 
     @Override

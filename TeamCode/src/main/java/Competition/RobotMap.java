@@ -12,10 +12,10 @@ import FtcExplosivesPackage.BiohazardNavX;
 
 public class RobotMap {
     public static DcMotor bright, fright, bleft, fleft, intLeft, intRight, lift, rotator;
-    public static Servo gripper, swinger, hooker, theCooker, theBooker, leftTransfer, rightTransfer, skyGrabber;
+    public static Servo gripper, swinger, hooker, theCooker, theBooker, leftTransfer, rightTransfer, skyGrabber, theLooker, theRightLooker;
     public static BiohazardNavX gyro;
     public static WebcamName stoneCam;
-    public static ModernRoboticsI2cRangeSensor frontRange, backRange;
+    public static ModernRoboticsI2cRangeSensor frontRange, backRange, sideRange;
 
     public RobotMap(HardwareMap hw) {
         //Hello, there
@@ -24,8 +24,8 @@ public class RobotMap {
         fright  = hw.get(DcMotor.class, "fright");
         bleft   = hw.get(DcMotor.class, "bleft");
         fleft   = hw.get(DcMotor.class, "fleft");
-        lift    = hw.get(DcMotor.class, "lift");
-        rotator = hw.get(DcMotor.class, "rotator");
+        //lift    = hw.get(DcMotor.class, "lift");
+        //rotator = hw.get(DcMotor.class, "rotator");
 
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
         fright.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -47,8 +47,11 @@ public class RobotMap {
         leftTransfer = hw.get(Servo.class, "leftTr");
         rightTransfer = hw.get(Servo.class, "rightTr");
         skyGrabber = hw.get(Servo.class, "sky");
+        theLooker = hw.get(Servo.class, "theLooker");
+        theRightLooker = hw.get(Servo.class, "theRightLooker");
 
         frontRange = hw.get(ModernRoboticsI2cRangeSensor.class, "frontRange");
         backRange = hw.get(ModernRoboticsI2cRangeSensor.class, "backRange");
+        sideRange = hw.get(ModernRoboticsI2cRangeSensor.class, "sideRange");
     }
 }

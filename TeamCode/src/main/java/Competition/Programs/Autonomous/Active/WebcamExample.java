@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active;
 
 /*
  * Copyright (c) 2019 OpenFTC Team

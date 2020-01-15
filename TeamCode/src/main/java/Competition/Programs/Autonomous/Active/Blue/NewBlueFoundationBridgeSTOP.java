@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active.Blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 

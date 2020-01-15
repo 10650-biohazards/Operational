@@ -23,12 +23,14 @@ public class DriveCommand extends BioCommand {
     private BiohazardNavX gyro;
 
     private Gamepad driver;
+    private Gamepad manip;
 
     Utility u;
 
     PID turnPID = new PID();
 
     boolean first = true;
+    boolean disabled = false;
 
     double startTime;
 
@@ -85,6 +87,7 @@ public class DriveCommand extends BioCommand {
         gyro = RobotMap.gyro;
 
         driver = Robot.driver;
+        manip = Robot.manipulator;
 
     }
 
@@ -151,14 +154,20 @@ public class DriveCommand extends BioCommand {
 
 
         //deadband system is set to 0.05
-        if (Math.abs(straightPower) > DEADBAND || Math.abs(sidePower) > DEADBAND || Math.abs(turnPower) > DEADBAND) {
+        if (!disabled) {
+            if (driver.left_bumper && VisionCommand.intakeStatus == VisionCommand.stoneStatus.TILTLEFT) {
+                setPows(1,1,0,0);
+            } else if (driver.left_bumper && VisionCommand.intakeStatus == VisionCommand.stoneStatus.TILTRIGHT) {
+                setPows(0,0,1,1);
+            } else if (Math.abs(straightPower) > DEADBAND || Math.abs(sidePower) > DEADBAND || Math.abs(turnPower) > DEADBAND) {
 
-            setPows(brightPower,frightPower,bleftPower,fleftPower);
+                setPows(brightPower,frightPower,bleftPower,fleftPower);
 
-        } else {
+            } else {
 
-            setPows(0,0,0,0);
+                setPows(0,0,0,0);
 
+            }
         }
 
         /*op.telemetry.addData("left  y", Robot.driver.left_stick_y);
@@ -174,7 +183,7 @@ public class DriveCommand extends BioCommand {
         op.telemetry.addData("Field Oriented", isFieldOrientedControl);
         op.telemetry.addData("Refresh Time", refreshTime);
         op.telemetry.update();*/
-        }
+    }
 
 
     private void autoStack() {
@@ -256,12 +265,15 @@ public class DriveCommand extends BioCommand {
         }
     }
 
-    private void setPows(double brp, double frp, double blp, double flp) {
+    public void setPows(double brp, double frp, double blp, double flp) {
 
         bright.setPower(brp);
         fright.setPower(frp);
         bleft.setPower(blp);
         fleft.setPower(flp);
+    }
+
+    public void disableController() {
 
     }
 

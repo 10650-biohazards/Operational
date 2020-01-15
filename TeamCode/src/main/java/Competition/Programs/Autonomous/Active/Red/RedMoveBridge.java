@@ -1,22 +1,22 @@
-package Competition.Programs.Autonomous;
-
+package Competition.Programs.Autonomous.Active.Red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import Competition.Robot;
 import Competition.RobotMap;
 import Competition.Subsystems.DriveSubsystem;
+import Competition.Subsystems.HookSubsystem;
 import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
+import Utilities.Utility;
 
-@Autonomous(name = "Sample Auto")
-@Disabled
-public class sampleAuto extends ExplosiveAuto {
+@Autonomous (name = "Red Move | Bridge Park", group = "red")
+public class RedMoveBridge extends ExplosiveAuto {
 
     DriveSubsystem drive;
-
+    HookSubsystem hooker;
     curveProcessor3 curve;
+    Utility u = new Utility(this);
 
     @Override
     public void initHardware() {
@@ -24,10 +24,11 @@ public class sampleAuto extends ExplosiveAuto {
         Robot robot = new Robot(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(0, 0, 90);
-        RobotMap.gyro.startAng = 5;
+        Robot.track.setCurrentNode(1, -3, 0);
+        RobotMap.gyro.startAng = 0;
 
         drive = Robot.drive;
+        hooker = Robot.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }
@@ -39,12 +40,11 @@ public class sampleAuto extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveTurnPID(355);
-
-        //drive.straightToPoint(new myPoint(1, -2));
-        //drive.straightToPoint(new myPoint(0, 2));
-        //drive.straightToPoint(new myPoint(-1, 2));
-        //drive.straightToPoint(new myPoint(3, 3));
+        drive.moveStraightPID(2000);
+        u.waitMS(22000);
+        drive.moveRangePID(27, 2000, false);
+        drive.moveTurnPID(5, 1000);
+        drive.moveStrafePow(-0.4, 2000);
     }
 
     @Override

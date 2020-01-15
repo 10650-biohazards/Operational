@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active.Blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -10,10 +10,13 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous (name = "In honor of Neel Maity")
-public class Neel extends ExplosiveAuto {
+@Autonomous (name = "Blue Move | Bridge Park", group = "blue")
+public class BlueMoveBridge extends ExplosiveAuto {
 
     DriveSubsystem drive;
+    HookSubsystem hooker;
+    curveProcessor3 curve;
+    Utility u = new Utility(this);
 
     @Override
     public void initHardware() {
@@ -21,9 +24,13 @@ public class Neel extends ExplosiveAuto {
         Robot robot = new Robot(this);
         robot.enable();
 
+        Robot.track.setCurrentNode(1, -3, 0);
         RobotMap.gyro.startAng = 0;
 
         drive = Robot.drive;
+        hooker = Robot.hooker;
+
+        curve = new curveProcessor3(drive, telemetry, this);
     }
 
     @Override
@@ -33,7 +40,11 @@ public class Neel extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStrafePow(0.5, 200);
+        drive.moveStraightPID(2000);
+        u.waitMS(22000);
+        drive.moveRangePID(29, 2000, false);
+        drive.moveTurnPID(5, 1000);
+        drive.moveStrafePow(0.4, 1500);
     }
 
     @Override

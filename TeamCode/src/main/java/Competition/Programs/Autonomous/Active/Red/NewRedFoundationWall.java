@@ -1,4 +1,4 @@
-package Competition.Programs.Autonomous;
+package Competition.Programs.Autonomous.Active.Red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -10,8 +10,8 @@ import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous (name = "New Blue Foundation | Wall Park", group = "blue")
-public class NewBlueFoundationWall extends ExplosiveAuto {
+@Autonomous (name = "New Red Foundation | Wall Park", group = "red")
+public class NewRedFoundationWall extends ExplosiveAuto {
 
     DriveSubsystem drive;
     HookSubsystem hooker;
@@ -40,19 +40,21 @@ public class NewBlueFoundationWall extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStraightPID(-300);
-        drive.moveStrafePow(-1, 500);
-        drive.moveTurnPID(90);
-        drive.moveStrafePow(-0.3, 700);
-        drive.moveRangePID(10, 5000, false);
+        drive.moveStraightPID(300);
+        drive.moveStrafeMod(-0.3, 2800);
+        //drive.moveStrafePow(-1, 500);
+        //drive.moveTurnPID(90);
+        //drive.moveStrafePow(-0.4, 500);
+        drive.moveRangePID(15, 5000, true);
         hooker.hook();
         u.waitMS(1000);
-        drive.moveStrafePow(0.7, 1400);
-        drive.moveTurnFound(5);
-        drive.moveStrafePow(-0.7, 700);
+        drive.moveStrafeRange(6, 5000, true);
+        //drive.moveStrafePow(0.7, 1100);
+        drive.moveTurnFound(180);
+        drive.moveStrafePow(-0.7, 1200);
         hooker.release();
-        drive.moveStraightPID(-1000, 1000);
-        drive.moveTurnPID(355);
+        drive.moveStraightPID(1000, 1000);
+        drive.moveTurnPID(190);
         drive.moveStrafePow(1, 700);
     }
 
@@ -61,4 +63,3 @@ public class NewBlueFoundationWall extends ExplosiveAuto {
 
     }
 }
-
