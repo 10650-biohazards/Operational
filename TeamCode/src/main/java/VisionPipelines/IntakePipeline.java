@@ -19,9 +19,13 @@ public class IntakePipeline extends OpenCvPipeline {
     String TAG = "INTAKE PIPELINE";
     boolean processing = true;
 
-    public static myRect stoneRect;
     public static int slowThresh = 180;
+    public int lastY = 0;
+    public static int minY = 140;
+    public double lastTime = System.currentTimeMillis();
 
+    public static myRect stoneRect;
+    public static double stoneSpeed;
     public static boolean centPresent;
     public static boolean leftPresent;
     public static boolean rightPresent;
@@ -53,8 +57,6 @@ public class IntakePipeline extends OpenCvPipeline {
 
             Mat maskedImage = new Mat();
 
-
-
             //PROCESSING FOR LOOKER MECHANISM
             int leftWeight = 0, rightWeight = 0, centWeight = 0;
             int centX = 150, leftX = 40, rightX = 230;
@@ -65,7 +67,6 @@ public class IntakePipeline extends OpenCvPipeline {
             //Applying HSV limits
             ImageUtil.hsvInRange(hsv, yellowMin, yellowMax, maskedImage);
 
-            int minY = 130;
             for (int i = 0; i < 3; i++) {
                 for (int y = maskedImage.height() - 1; y > minY; y--) {
                     if (maskedImage.get(y, xVals[i])[0] != 0) weights[i]++;
@@ -96,6 +97,15 @@ public class IntakePipeline extends OpenCvPipeline {
                     maxArea = rect.area();
                 }
             }
+
+            if (maxRect != null) {
+                int yDiff = maxRect.y - lastY;
+                double timeDiff = System.currentTimeMillis() - lastTime;
+                lastTime = System.currentTimeMillis();
+
+                stoneSpeed = (double) yDiff / (double)((double) timeDiff / (double) 1000);
+            }
+
             stoneRect = maxRect;
 
 

@@ -19,8 +19,6 @@ import FtcExplosivesPackage.BiohazardTele;
 import Utilities.PID;
 import VisionPipelines.FetchPipeline;
 import VisionPipelines.IntakePipeline;
-import VisionPipelines.OtherLineUpPipeline;
-import VisionPipelines.SkystonePipeline;
 import VisionPipelines.StackPipeline;
 
 public class VisionCommand extends BioCommand {
@@ -31,8 +29,6 @@ public class VisionCommand extends BioCommand {
     stackStatus currStack;
     static stoneStatus intakeStatus = stoneStatus.NONE;
     static double stoneY;
-
-    OpenCvCamera intakeCam;
     OpenCvCamera phoneCam;
 
     PID turnPID = new PID();
@@ -51,11 +47,6 @@ public class VisionCommand extends BioCommand {
 
     @Override
     public void init() {
-        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-        intakeCam = new OpenCvWebcam(hw.get(WebcamName.class, "stoned cam"), cameraMonitorViewId);
-        intakeCam.openCameraDevice();
-        intakeCam.setPipeline(new FetchPipeline());
-        intakeCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
         int cameraMonitorViewId2 = hw.appContext.getResources().getIdentifier("cameraMonitorViewId2", "id", hw.appContext.getPackageName());
         phoneCam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId2);
@@ -78,7 +69,6 @@ public class VisionCommand extends BioCommand {
         //if (Robot.driver.a) {
         //stackVision();
         //}
-
     }
 
     public void stackVision() {
@@ -104,30 +94,31 @@ public class VisionCommand extends BioCommand {
 
         boolean right = IntakePipeline.rightPresent, center = IntakePipeline.centPresent, left = IntakePipeline.leftPresent;
 
-        op.telemetry.addData("Center ", center);
-        op.telemetry.addData("Left ", left);
-        op.telemetry.addData("Right ", right);
+        //op.telemetry.addData("Speeed", IntakePipeline.stoneSpeed);
+        //op.telemetry.addData("Center", center);
+        //op.telemetry.addData("Left", left);
+        //op.telemetry.addData("Right", right);
 
         if (center && !right && !left) {
             intakeStatus = stoneStatus.ONTARGET;
-            op.telemetry.addData("TARGET ACQUIRED. SEEK AND DESTROY!", "");
+            //op.telemetry.addData("TARGET ACQUIRED. SEEK AND DESTROY!", "");
         } else if (center && right && !left) {
             intakeStatus = stoneStatus.TILTRIGHT;
-            op.telemetry.addData("SLIGHT RIGHT", "");
+            //op.telemetry.addData("SLIGHT RIGHT", "");
         } else if (center && !right && left) {
             intakeStatus = stoneStatus.TILTLEFT;
-            op.telemetry.addData("SLIGHT LEFT", "");
+            //op.telemetry.addData("SLIGHT LEFT", "");
         } else if (!center && right && !left) {
             intakeStatus = stoneStatus.FARRIGHT;
-            op.telemetry.addData("FAR RIGHT", "");
+            //op.telemetry.addData("FAR RIGHT", "");
         } else if (!center && !right && left) {
             intakeStatus = stoneStatus.FARLEFT;
-            op.telemetry.addData("FAR LEFT", "");
+            //op.telemetry.addData("FAR LEFT", "");
         } else {
             intakeStatus = stoneStatus.NONE;
-            op.telemetry.addData("NO TARGET IN SIGHT", "");
+            //op.telemetry.addData("NO TARGET IN SIGHT", "");
         }
-        op.telemetry.update();
+        //op.telemetry.update();
     }
 
     public void fetchVision() {

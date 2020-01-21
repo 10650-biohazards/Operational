@@ -12,7 +12,7 @@ public class Soundboard {
 
     HardwareMap hw;
 
-    int[] sounds = {R.raw.jeporady, R.raw.soundgold, R.raw.matchnoises};
+    //int[] sounds = {R.raw.jeporady, R.raw.soundgold, R.raw.matchnoises};
     int[] strtPts = {0, 0, 0};
 
     public enum SkystoneSound {FIRSTSOUND, SECONDSOUND, THIRDSOUND}
@@ -22,19 +22,19 @@ public class Soundboard {
     }
 
     public void playRand(boolean startStop) {
-        int pos = rand.nextInt(sounds.length);
-        MediaPlayer player = MediaPlayer.create(hw.appContext, sounds[pos]);
-        player.setLooping(false);
-        player.seekTo(strtPts[pos]);
+        //int pos = rand.nextInt(sounds.length);
+        //MediaPlayer player = MediaPlayer.create(hw.appContext, sounds[pos]);
+        //player.setLooping(false);
+        //player.seekTo(strtPts[pos]);
         if (startStop) {
-            player.start();
+            //player.start();
         } else {
-            player.stop();
+            //player.stop();
         }
     }
 
     public void playSound(int sound, int startPt, boolean startStop) {
-        MediaPlayer jeopardy = MediaPlayer.create(hw.appContext, R.raw.jeporady);
+        /*MediaPlayer jeopardy = MediaPlayer.create(hw.appContext, R.raw.jeporady);
         MediaPlayer nowthatsalotofdamage = MediaPlayer.create(hw.appContext, R.raw.nowthatsalotofdamage);
         MediaPlayer oofwiisports = MediaPlayer.create(hw.appContext, R.raw.oofwiisports);
         MediaPlayer tunaktunaktun = MediaPlayer.create(hw.appContext, R.raw.tunaktunaktun);
@@ -102,11 +102,11 @@ public class Soundboard {
 
         } else if (sound == 20) {
 
-        }
+        }*/
     }
 
     public void PlaySkystoneSound(SkystoneSound FirstSecondThird) {
-        if (FirstSecondThird == SkystoneSound.FIRSTSOUND) {
+        /*if (FirstSecondThird == SkystoneSound.FIRSTSOUND) {
             MediaPlayer First = MediaPlayer.create(hw.appContext, R.raw.wearenumberone);
             First.setLooping(false);
             First.start();
@@ -118,6 +118,6 @@ public class Soundboard {
             MediaPlayer Third = MediaPlayer.create(hw.appContext, R.raw.thatsthreequickmaths);
             Third.setLooping(false);
             Third.start();
-        }
+        }*/
     }
 }

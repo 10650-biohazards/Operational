@@ -33,10 +33,10 @@ public class BiohazardNavX implements ExplosivePIDEnabledHardware {
     public double getYaw(){
         try{
             if (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle == 0.0 && first) {
-                MediaPlayer player = MediaPlayer.create(hw.appContext, R.raw.oofwiisports);
-                player.setLooping(false);
-                player.seekTo(0);
-                player.start();
+                //MediaPlayer player = MediaPlayer.create(hw.appContext, R.raw.oofwiisports);
+                //player.setLooping(false);
+                //player.seekTo(0);
+                //player.start();
                 first = false;
             }
             return startAng - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;

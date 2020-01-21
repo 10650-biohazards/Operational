@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import Competition.Robot;
 import Competition.RobotMap;
-import Competition.Subsystems.VisionSubsystem;
 import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardTele;
 import Utilities.PID;
@@ -38,6 +37,8 @@ public class MechCommand extends BioCommand {
     Utility u;
 
     boolean shuttleFirst, foundFirst;
+
+    double lastTriggered = System.currentTimeMillis();
 
     //ROTATION STUFF
     private final int VERTICAL = 42;
@@ -80,6 +81,7 @@ public class MechCommand extends BioCommand {
         theLeftLooker = RobotMap.theLooker;
 
         RobotMap.skyGrabber.setPosition(0.2);
+        RobotMap.theBooker.setPosition(0.0);
 
         //lift = RobotMap.lift;
         rotator = RobotMap.rotator;
@@ -138,8 +140,6 @@ public class MechCommand extends BioCommand {
         //moveRotation();
         //updateRotation();
 
-        //playMusic();
-
         cookInEm();
     }
 
@@ -157,24 +157,17 @@ public class MechCommand extends BioCommand {
     }
 
     private void rigInEm() {
-        if (manip.right_stick_y < -0.05) {
-
-            if (foundFirst) {
-                u.waitMS(30);
-                foundFirst = false;
-            }
-            theBookie.setPosition(0.0);
-        } else if (manip.a) {
-            //theBookie.setPosition(0.0);
+        if (manip.right_stick_y < -0.05 || VisionCommand.stoneY > IntakePipeline.slowThresh) {
+            theBookie.setPosition(0.2027);
         } else {
-            theBookie.setPosition(0.3);
-            foundFirst = true;
+            theBookie.setPosition(0.3472);
         }
     }
 
     public void intake() {
-
         if (manip.right_stick_y > 0.05) {
+            IntakePipeline.minY = 140;
+            //STOOPID ONE
             if (VisionCommand.intakeStatus == VisionCommand.stoneStatus.ONTARGET) {
                 theRightLooker.setPosition(0.0);
                 theLeftLooker.setPosition(0.25);

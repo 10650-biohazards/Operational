@@ -14,7 +14,7 @@ import Competition.RobotMap;
 import FtcExplosivesPackage.BiohazardTele;
 import VisionPipelines.IntakePipeline;
 
-@TeleOp(name = "Meet 1 TeleOp")
+@TeleOp(name = "Vision Test")
 public class VisionCommandTest extends BiohazardTele {
 
     VisionCommand vision;

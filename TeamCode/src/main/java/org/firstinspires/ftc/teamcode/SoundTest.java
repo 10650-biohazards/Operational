@@ -37,10 +37,10 @@ public class SoundTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        MediaPlayer yes = MediaPlayer.create(hardwareMap.appContext, R.raw.matchnoises);
-        yes.setLooping(true);
-        yes.seekTo(25000);
-        yes.start();
+        //MediaPlayer yes = MediaPlayer.create(hardwareMap.appContext, R.raw.matchnoises);
+        //yes.setLooping(true);
+        //yes.seekTo(25000);
+        //yes.start();
 
         /*
          * Instantiate an OpenCvCamera object for the camera we'll be using.
