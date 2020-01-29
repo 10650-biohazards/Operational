@@ -50,7 +50,7 @@ public class IntakePipeline extends OpenCvPipeline {
             //s range is 0-255
             //v range is 0-255
 
-            Scalar yellowMin = new Scalar(10, 100, 100); //yellow min
+            Scalar yellowMin = new Scalar(10, 50, 100); //yellow min
             Scalar yellowMax = new Scalar(29, 255, 255); //yellow max
 
             List<Mat> rgbaChannels = new ArrayList<>();

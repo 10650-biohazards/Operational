@@ -81,7 +81,7 @@ public class MechCommand extends BioCommand {
         theLeftLooker = RobotMap.theLooker;
 
         RobotMap.skyGrabber.setPosition(0.2);
-        RobotMap.theBooker.setPosition(0.0);
+        RobotMap.theBooker.setPosition(0.3472);
 
         //lift = RobotMap.lift;
         rotator = RobotMap.rotator;
@@ -110,20 +110,9 @@ public class MechCommand extends BioCommand {
 
     @Override
     public void loop() {
-
-        if (manip.y) {
-            //theRightLooker.setPosition(0.25);
-        } else {
-            //theRightLooker.setPosition(0.0);
-        }
-        if (manip.y) {
-            //theLeftLooker.setPosition(0);
-        } else {
-            //theLeftLooker.setPosition(0.25);
-        }
         //cairrage();
         hooker();
-        manualTransfer();
+        //manualTransfer();
 
         if (manip.a) {
             rigInEm();
@@ -143,13 +132,8 @@ public class MechCommand extends BioCommand {
         cookInEm();
     }
 
-    private void manualTransfer() {
-        leftTransfer.setPosition(0.5 + (manip.left_stick_y / 2));
-        rightTransfer.setPosition(0.5 - (manip.left_stick_y / 2));
-    }
-
     private void cookInEm() {
-        if (manip.left_bumper) {
+        if (manip.right_trigger > 0.05) {
             theCooker.setPosition(0);
         } else {
             theCooker.setPosition(0.6);
@@ -157,7 +141,7 @@ public class MechCommand extends BioCommand {
     }
 
     private void rigInEm() {
-        if (manip.right_stick_y < -0.05 || VisionCommand.stoneY > IntakePipeline.slowThresh) {
+        if ((manip.right_stick_y < -0.05 || VisionCommand.stoneY > IntakePipeline.slowThresh) && VisionCommand.stoneY > 90) {
             theBookie.setPosition(0.2027);
         } else {
             theBookie.setPosition(0.3472);
@@ -165,6 +149,12 @@ public class MechCommand extends BioCommand {
     }
 
     public void intake() {
+
+        if (manip.y) {
+            theRightLooker.setPosition(0.25);
+            theLeftLooker.setPosition(0);
+        }
+
         if (manip.right_stick_y > 0.05) {
             IntakePipeline.minY = 140;
             //STOOPID ONE
@@ -338,6 +328,11 @@ public class MechCommand extends BioCommand {
             sound.playSound(3,0,false);
             sound.playSound(4,0,false);
         }
+    }
+
+    private void manualTransfer() {
+        leftTransfer.setPosition(0.5 + (manip.left_stick_y / 2));
+        rightTransfer.setPosition(0.5 - (manip.left_stick_y / 2));
     }
 
     @Override

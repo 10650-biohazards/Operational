@@ -2,32 +2,19 @@ package Competition.Programs.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import Competition.Commands.DriveCommand;
-import Competition.Commands.MechCommand;
-import Competition.Commands.VisionCommand;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 import Competition.Robot;
 import Competition.RobotMap;
 import FtcExplosivesPackage.BiohazardTele;
 
-@TeleOp(name = "Meet 1 TeleOp")
+@TeleOp(name = "Disconnect Test")
 public class DisconnectTest extends BiohazardTele {
-
-    DriveCommand drive;
-    MechCommand mech;
-    VisionCommand vision;
 
     @Override
     public void initHardware() {
         RobotMap robotMap = new RobotMap(hardwareMap);
         Robot robot = new Robot(this, true);
-
-        drive = new DriveCommand(this);
-        mech = new MechCommand(this);
-        vision = new VisionCommand(this, hardwareMap);
-
-        drive.enable();
-        mech.enable();
-        vision.enable();
     }
 
     @Override
@@ -42,7 +29,9 @@ public class DisconnectTest extends BiohazardTele {
 
     @Override
     public void bodyLoop() {
-
+        telemetry.addData("Yes Frint", RobotMap.frontRange.getDistance(DistanceUnit.INCH));
+        telemetry.addData("Yes BAck", RobotMap.backRange.getDistance(DistanceUnit.INCH));
+        telemetry.update();
     }
 
     @Override

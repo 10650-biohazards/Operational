@@ -8,12 +8,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import Competition.Commands.DriveCommand;
-import Competition.Commands.MechCommand;
-import Competition.Commands.VisionCommand;
 import Competition.Robot;
 import Competition.RobotMap;
 import FtcExplosivesPackage.BiohazardTele;
-import VisionPipelines.IntakePipeline;
 import VisionPipelines.JudgementPipeline;
 
 @TeleOp(name = "Judgement Day")
@@ -52,19 +49,19 @@ public class JudgementDay extends BiohazardTele {
         Point position = JudgementPipeline.position;
         if (JudgementPipeline.found) {
             if (position.x > 180) {
-                drive.setPows(0, 0, 0.5, 0.5);
+                drive.setPows(0, 0, 0.6, 0.6);
             } else if (position.x < 140) {
-                drive.setPows(0.5, 0.5, 0, 0);
+                drive.setPows(0.6, 0.6, 0, 0);
             } else {
-                drive.setPows(0.5, 0.5, 0.5, 0.5);
+                drive.setPows(0.6, 0.6, 0.6, 0.6);
             }
         } else {
             if (position.y < 25) {
                 drive.setPows(0, 0, 0, 0);
             } else if (position.x > 160) {
-                drive.setPows(-0.5, -0.5, 0.5, 0.5);
+                drive.setPows(-0.6, -0.6, 0.6, 0.6);
             } else {
-                drive.setPows(0.5, 0.5, -0.5, -0.5);
+                drive.setPows(0.6, 0.6, -0.6, -0.6);
             }
         }
         telemetry.addData("POs", position.toString());
@@ -73,6 +70,6 @@ public class JudgementDay extends BiohazardTele {
 
     @Override
     public void exit() {
-
+        drive.setPows(0, 0, 0, 0);
     }
 }
