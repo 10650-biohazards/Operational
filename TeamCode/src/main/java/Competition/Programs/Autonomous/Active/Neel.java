@@ -2,11 +2,11 @@ package Competition.Programs.Autonomous.Active;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Subsystems.IntakeSubsystem;
+import Competition.Subsystems.ParkSubsystem;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
-import Competition.Subsystems.HookSubsystem;
-import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
@@ -14,16 +14,22 @@ import Utilities.Utility;
 public class Neel extends ExplosiveAuto {
 
     DriveSubsystem drive;
+    ParkSubsystem ben;
+    IntakeSubsystem intake;
+
+    Utility u = new Utility(this);
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        RobotMap.gyro.startAng = 0;
+        ZookerMap.gyro.startAng = 0;
 
-        drive = Robot.drive;
+        drive = Zooker.drive;
+        ben = Zooker.park;
+        intake = Zooker.intake;
     }
 
     @Override
@@ -33,7 +39,7 @@ public class Neel extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStrafePow(0.5, 200);
+        ben.extend(500, true);
     }
 
     @Override

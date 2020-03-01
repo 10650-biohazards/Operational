@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Soundboard;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import Competition.Subsystems.IntakeSubsystem;
@@ -16,7 +16,6 @@ import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.PID;
 import Utilities.Utility;
 import VisionPipelines.LineUpPipeline;
-import VisionPipelines.OtherLineUpPipeline;
 
 @Autonomous(name = "Red Double Skystone", group = "red")
 @Disabled
@@ -37,17 +36,17 @@ public class RedDoubleSky extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(-1.5, -2.625, 0);
-        RobotMap.gyro.startAng = 0;
+        Zooker.track.setCurrentNode(-1.5, -2.625, 0);
+        ZookerMap.gyro.startAng = 0;
 
-        drive = Robot.drive;
-        vision = Robot.vision;
-        hook = Robot.hooker;
-        intake = Robot.intake;
+        drive = Zooker.drive;
+        vision = Zooker.vision;
+        hook = Zooker.hooker;
+        intake = Zooker.intake;
 
         sound = new Soundboard(this.hardwareMap);
 

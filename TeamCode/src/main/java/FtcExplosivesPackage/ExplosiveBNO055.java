@@ -35,7 +35,7 @@ public class ExplosiveBNO055 implements ExplosivePIDEnabledHardware {
         try{
             return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         } catch(Exception e){
-            android.util.Log.d("Robot", "GYRO ERROR: " + e.getMessage());
+            android.util.Log.d("Zooker", "GYRO ERROR: " + e.getMessage());
             return getYaw();
         }
     }

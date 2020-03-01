@@ -5,12 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import Competition.Commands.DriveCommand;
 import Competition.Commands.MechCommand;
 import Competition.Commands.VisionCommand;
+import Competition.FinalMap;
+import Competition.FinalRobot;
 import Competition.Zooker;
 import Competition.ZookerMap;
 import FtcExplosivesPackage.BiohazardTele;
 
-@TeleOp(name = "Zooker TeleOp")
-public class RealTele extends BiohazardTele {
+@TeleOp(name = "Next Robot TeleOp")
+public class NextTele extends BiohazardTele {
 
     DriveCommand drive;
     MechCommand mech;
@@ -18,16 +20,12 @@ public class RealTele extends BiohazardTele {
 
     @Override
     public void initHardware() {
-        ZookerMap robotMap = new ZookerMap(hardwareMap);
-        Zooker robot = new Zooker(this, true);
+        FinalMap robotMap = new FinalMap(hardwareMap);
+        FinalRobot robot = new FinalRobot(this, true);
 
         drive = new DriveCommand(this);
-        mech = new MechCommand(this);
-        vision = new VisionCommand(this, hardwareMap);
 
         drive.enable();
-        mech.enable();
-        vision.enable();
     }
 
     @Override

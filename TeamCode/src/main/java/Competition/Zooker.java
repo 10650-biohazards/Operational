@@ -5,31 +5,34 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
+import Competition.Subsystems.ParkSubsystem;
 import Competition.Subsystems.VisionSubsystem;
 import Competition.Subsystems.IntakeSubsystem;
 import Utilities.driveTracker2;
 
-public class Robot {
+public class Zooker {
 
     public static DriveSubsystem drive;
     public static VisionSubsystem vision;
     public static HookSubsystem hooker;
     public static IntakeSubsystem intake;
+    public static ParkSubsystem park;
 
     public static driveTracker2 track;
 
     public static Gamepad driver, manipulator;
 
-    public Robot(LinearOpMode op) {
+    public Zooker(LinearOpMode op) {
         drive = new DriveSubsystem(op);
         vision = new VisionSubsystem(op, op.hardwareMap);
         hooker = new HookSubsystem(op);
         intake = new IntakeSubsystem(op);
+        park = new ParkSubsystem(op);
         driver = op.gamepad1;
         manipulator = op.gamepad2;
     }
 
-    public Robot(LinearOpMode op, boolean teleOp) {
+    public Zooker(LinearOpMode op, boolean teleOp) {
         driver = op.gamepad1;
         manipulator = op.gamepad2;
     }
@@ -42,5 +45,10 @@ public class Robot {
         vision.enable();
         intake.enable();
         hooker.enable();
+        park.enable();
+    }
+
+    public void stopVision() {
+        vision.disable();
     }
 }

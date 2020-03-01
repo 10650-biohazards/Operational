@@ -2,9 +2,8 @@ package Competition.Subsystems;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import Competition.RobotMap;
+import Competition.ZookerMap;
 import FtcExplosivesPackage.Subsystem;
 
 public class IntakeSubsystem extends Subsystem {
@@ -17,8 +16,8 @@ public class IntakeSubsystem extends Subsystem {
 
     @Override
     public void enable() {
-        intLeft = RobotMap.intLeft;
-        intRight = RobotMap.intRight;
+        intLeft = ZookerMap.intLeft;
+        intRight = ZookerMap.intRight;
 
         intLeft.setPower(0);
         intRight.setPower(0);

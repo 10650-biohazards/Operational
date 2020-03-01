@@ -3,7 +3,7 @@ package Competition.Subsystems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import Competition.RobotMap;
+import Competition.ZookerMap;
 import Utilities.PID;
 
 public class LiftThread implements Runnable {
@@ -17,7 +17,7 @@ public class LiftThread implements Runnable {
 
     public void enable(LinearOpMode linear) {
         Thread t = new Thread(this);
-        rotator = RobotMap.rotator;
+        rotator = ZookerMap.rotator;
         op = linear;
         t.start();
     }

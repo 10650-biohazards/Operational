@@ -100,7 +100,7 @@ public class SkystonePipeline extends OpenCvPipeline {
             int[] maxMassIndex = {3, 3};
 
 
-            Mat maskedImage;
+            Mat maskedImage = null;
             Mat colSum = new Mat();
             double mass;
             int[] data = new int[3];
@@ -110,6 +110,7 @@ public class SkystonePipeline extends OpenCvPipeline {
             List<MatOfPoint> contours = new ArrayList<>();
             //End
 
+            Mat contTemp = null;
 
             for (int i = 0; i < 3; i++) {
                 maskedImage = new Mat();
@@ -118,7 +119,10 @@ public class SkystonePipeline extends OpenCvPipeline {
                 ImageUtil.hsvInRange(hsv, hsvMin.get(i), hsvMax.get(i), maskedImage);
 
                 //Start Core's additions
-                Mat contTemp = maskedImage.clone();
+                if (contTemp != null) {
+                    contTemp.release();
+                }
+                contTemp = maskedImage.clone();
                 Imgproc.findContours(contTemp, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
                 //End Core's addition
 
@@ -165,6 +169,14 @@ public class SkystonePipeline extends OpenCvPipeline {
                     result = i;
                 }
             }
+
+            hsv.release();
+            if (maskedImage != null) {
+                maskedImage.release();
+            }
+            colSum.release();
+            contTemp.release();
+            hierarchy.release();
         }
 
         return rgbaFrame;

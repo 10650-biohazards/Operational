@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.PID;
 
-@TeleOp(name = "Robot Breaker")
+@TeleOp(name = "Zooker Breaker")
 @Disabled
 public class breakTest extends ExplosiveAuto {
 

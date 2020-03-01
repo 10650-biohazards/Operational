@@ -128,6 +128,17 @@ public class IntakePipeline extends OpenCvPipeline {
             Imgproc.line(rgbaFrame, new Point(centX, rgbaFrame.height()), new Point(centX, 0), new Scalar(0, 255, 0), 1);
             Imgproc.line(rgbaFrame, new Point(leftX, rgbaFrame.height()), new Point(leftX, 0), new Scalar(0, 255, 0), 1);
             Imgproc.line(rgbaFrame, new Point(rightX, rgbaFrame.height()), new Point(rightX, 0), new Scalar(0, 255, 0), 1);
+
+
+            for (Mat mat : rgbaChannels) {
+                mat.release();
+            }
+
+            hsv.release();
+            maskedImage.release();
+            contTemp.release();
+            hierarchy.release();
+
         }
 
         return rgbaFrame;

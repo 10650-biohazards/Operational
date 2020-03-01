@@ -66,7 +66,7 @@ public class VisionCommand extends BioCommand {
     @Override
     public void loop() {
         intakeVision();
-        //if (Robot.driver.a) {
+        //if (Zooker.driver.a) {
         //stackVision();
         //}
     }
@@ -94,7 +94,7 @@ public class VisionCommand extends BioCommand {
 
         boolean right = IntakePipeline.rightPresent, center = IntakePipeline.centPresent, left = IntakePipeline.leftPresent;
 
-        op.telemetry.addData("WHYYYYYY", stoneY);
+        //op.telemetry.addData("WHYYYYYY", stoneY);
         //op.telemetry.addData("Speeed", IntakePipeline.stoneSpeed);
         //op.telemetry.addData("Center", center);
         //op.telemetry.addData("Left", left);
@@ -119,7 +119,7 @@ public class VisionCommand extends BioCommand {
             intakeStatus = stoneStatus.NONE;
             //op.telemetry.addData("NO TARGET IN SIGHT", "");
         }
-        op.telemetry.update();
+        //op.telemetry.update();
     }
 
     public void fetchVision() {

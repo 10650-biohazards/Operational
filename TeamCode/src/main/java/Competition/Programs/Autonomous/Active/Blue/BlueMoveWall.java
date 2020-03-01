@@ -1,8 +1,8 @@
 package Competition.Programs.Autonomous.Active.Blue;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import DubinsCurve.curveProcessor3;
@@ -19,15 +19,15 @@ public class BlueMoveWall extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(1, -3, 0);
-        RobotMap.gyro.startAng = 0;
+        Zooker.track.setCurrentNode(1, -3, 0);
+        ZookerMap.gyro.startAng = 0;
 
-        drive = Robot.drive;
-        hooker = Robot.hooker;
+        drive = Zooker.drive;
+        hooker = Zooker.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }
@@ -44,6 +44,7 @@ public class BlueMoveWall extends ExplosiveAuto {
         drive.moveStraightRaw(-1300);
         u.waitMS(500);
         drive.moveStrafePow(0.3, 2000);
+        u.waitMS(30000);
     }
 
     @Override

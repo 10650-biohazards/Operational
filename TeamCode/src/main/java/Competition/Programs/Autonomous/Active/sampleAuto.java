@@ -4,8 +4,8 @@ package Competition.Programs.Autonomous.Active;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
@@ -20,14 +20,14 @@ public class sampleAuto extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(0, 0, 90);
-        RobotMap.gyro.startAng = 5;
+        Zooker.track.setCurrentNode(0, 0, 90);
+        ZookerMap.gyro.startAng = 5;
 
-        drive = Robot.drive;
+        drive = Zooker.drive;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }

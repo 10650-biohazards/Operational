@@ -3,8 +3,8 @@ package Competition.Programs.Autonomous.Active;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import Competition.Subsystems.VisionSubsystem;
@@ -25,16 +25,16 @@ public class Template extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(-1.5, -2.625, 0);
-        RobotMap.gyro.startAng = 0;
+        Zooker.track.setCurrentNode(-1.5, -2.625, 0);
+        ZookerMap.gyro.startAng = 0;
 
-        drive = Robot.drive;
-        vision = Robot.vision;
-        hooker = Robot.hooker;
+        drive = Zooker.drive;
+        vision = Zooker.vision;
+        hooker = Zooker.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }

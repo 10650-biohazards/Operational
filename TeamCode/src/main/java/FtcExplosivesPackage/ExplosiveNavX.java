@@ -32,7 +32,7 @@ public class ExplosiveNavX implements ExplosivePIDEnabledHardware {
         try{
             return startAng - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         } catch(Exception e){
-            android.util.Log.d("Robot", "GYRO ERROR: " + e.getMessage());
+            android.util.Log.d("Zooker", "GYRO ERROR: " + e.getMessage());
             return getYaw();
         }
     }
@@ -41,7 +41,7 @@ public class ExplosiveNavX implements ExplosivePIDEnabledHardware {
         try{
             return startPitch - (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle * -1);
         } catch (Exception e) {
-            android.util.Log.d("Robot", "GYRO ERROR: " + e.getMessage());
+            android.util.Log.d("Zooker", "GYRO ERROR: " + e.getMessage());
             return getPitch();
         }
     }

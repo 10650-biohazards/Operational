@@ -2,8 +2,8 @@ package Competition.Programs.Autonomous.Active.Red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import DubinsCurve.curveProcessor3;
@@ -20,15 +20,16 @@ public class NewRedFoundationBridge extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
+        robot.stopVision();
 
-        Robot.track.setCurrentNode(1, -3, 90);
-        RobotMap.gyro.startAng = 90;
+        Zooker.track.setCurrentNode(1, -3, 90);
+        ZookerMap.gyro.startAng = 90;
 
-        drive = Robot.drive;
-        hooker = Robot.hooker;
+        drive = Zooker.drive;
+        hooker = Zooker.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }
@@ -40,8 +41,9 @@ public class NewRedFoundationBridge extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStraightPID(300);
-        drive.moveStrafeMod(-0.3, 2800);
+        hooker.book();
+        drive.moveStraightPID(500);
+        drive.moveStrafeMod(-0.3, 5000);
         //drive.moveStrafePow(-1, 500);
         //drive.moveTurnPID(90);
         //drive.moveStrafePow(-0.4, 500);
@@ -53,8 +55,10 @@ public class NewRedFoundationBridge extends ExplosiveAuto {
         drive.moveTurnFound(180);
         drive.moveStrafePow(-0.7, 1200);
         hooker.release();
-        drive.moveRangePID(20, 1000, true);
-        drive.moveStrafePow(1, 700);
+        drive.moveRangePID(26, 1000, true);
+        drive.moveTurnPID(90, 3000);
+        drive.moveStraightPID(-1300);
+        u.waitMS(30000);
     }
 
     @Override

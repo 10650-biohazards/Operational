@@ -3,11 +3,10 @@ package Competition.Subsystems;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import Competition.RobotMap;
+import Competition.ZookerMap;
 import DubinsCurve.Node;
 import DubinsCurve.myPoint;
 import FtcExplosivesPackage.BioSubsystem;
@@ -15,6 +14,7 @@ import FtcExplosivesPackage.BiohazardNavX;
 import Utilities.PID;
 import Utilities.Utility;
 import Utilities.driveTracker2;
+import VisionPipelines.FoundationPipeline;
 
 public class DriveSubsystem extends BioSubsystem {
 
@@ -24,6 +24,8 @@ public class DriveSubsystem extends BioSubsystem {
     public BiohazardNavX gyro;
 
     ModernRoboticsI2cRangeSensor frontRange, backRange, sideRange;
+
+    public double start;
 
     public driveTracker2 track;
 
@@ -140,7 +142,7 @@ public class DriveSubsystem extends BioSubsystem {
             range = backRange;
         }
 
-        movePID.setup(0.012, 0, 0, 0.1, 0.16, target);
+        movePID.setup(0.016, 0, 0, 0.14, 0.16, target);
 
         u.startTimer(stopTime);
 
@@ -259,7 +261,78 @@ public class DriveSubsystem extends BioSubsystem {
             if (!op.opModeIsActive()) return;
         }
         setPows(0, 0, 0, 0);
-        u.waitMS(500);
+        //u.waitMS(500);
+    }
+
+    public void moveStrafeWithFound(double pow, int stopTime) {
+        PID modPID = new PID();
+        modPID.setup(0.02, 0, 0, 0, 0, start + 10);
+
+        u.startTimer(stopTime);
+
+        while (!u.timerDone() && op.opModeIsActive()) {
+            double power = pow;
+            double mod = modPID.status(refine(gyro.getYaw()));
+
+            setPows(power - mod, -power - mod, -power + mod, power + mod);
+
+            track.refresh();
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
+    }
+
+    public void moveStrafeWithFound2(double pow, int stopTime) {
+        PID modPID = new PID();
+        modPID.setup(0.02, 0, 0, 0, 0, refine(start - 10));
+
+        u.startTimer(stopTime);
+
+        while (!u.timerDone() && op.opModeIsActive()) {
+            double power = pow;
+            double mod = modPID.status(refine(gyro.getYaw()));
+
+            setPows(power - mod, -power - mod, -power + mod, power + mod);
+
+            track.refresh();
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
+    }
+
+    public void moveStrafeFound(int stopTime) {
+
+        PID modPID = new PID();
+        start = refine(gyro.getYaw());
+        modPID.setup(0.02, 0, 0, 0, 0, start);
+
+        u.startTimer(600);
+
+        setPows(-1, 1, 1, -1);
+
+        while (!u.timerDone()) {
+
+            double mod = modPID.status(refine(gyro.getYaw()));
+
+            setPows(-1 - mod, 1 - mod, 1 + mod, -1 + mod);
+
+            if (!op.opModeIsActive()) return;
+        }
+
+        u.startTimer(stopTime - 600);
+
+        while (!u.timerDone() && !FoundationPipeline.present) {
+
+            double mod = modPID.status(refine(gyro.getYaw()));
+
+            setPows(-1 - mod, 1 - mod, 1 + mod, -1 + mod);
+
+
+            if (!op.opModeIsActive()) return;
+        }
+        setPows(0, 0, 0, 0);
     }
 
     public void moveStraightRaw(double targDist) {
@@ -307,7 +380,8 @@ public class DriveSubsystem extends BioSubsystem {
         }
 
         PID movePID = new PID();
-        movePID.setup(0.002, 0, 0, 0.14, 0.25,refine(targetAng + mod));
+        //movePID.setup(0.002, 0, 0, 0.14, 0.25,refine(targetAng + mod));
+        movePID.setup(0.0025, 0, 0, 0.2, 0.25,refine(targetAng + mod));
 
         op.telemetry.addData("mod", mod);
         op.telemetry.addData("raw ang", gyro.getYaw());
@@ -583,16 +657,16 @@ public class DriveSubsystem extends BioSubsystem {
 
     @Override
     public void enable() {
-        bright = RobotMap.bright;
-        fright = RobotMap.fright;
-        bleft = RobotMap.bleft;
-        fleft = RobotMap.fleft;
+        bright = ZookerMap.bright;
+        fright = ZookerMap.fright;
+        bleft = ZookerMap.bleft;
+        fleft = ZookerMap.fleft;
 
-        gyro = RobotMap.gyro;
+        gyro = ZookerMap.gyro;
 
-        frontRange = RobotMap.frontRange;
-        backRange = RobotMap.backRange;
-        sideRange = RobotMap.sideRange;
+        frontRange = ZookerMap.frontRange;
+        backRange = ZookerMap.backRange;
+        sideRange = ZookerMap.sideRange;
     }
 
     @Override

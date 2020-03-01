@@ -3,8 +3,8 @@ package Competition.Programs.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.VisionSubsystem;
 import FtcExplosivesPackage.BiohazardTele;
 
@@ -15,17 +15,15 @@ public class test extends BiohazardTele {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
 
         robot.enable();
-
-        VisionSubsystem vision = Robot.vision;
     }
 
     @Override
     public void initAction() {
-
+        ZookerMap.theBooker.setPosition(0.3);
     }
 
     @Override
@@ -35,6 +33,9 @@ public class test extends BiohazardTele {
 
     @Override
     public void bodyLoop() {
+        ZookerMap.theBooker.setPosition(ZookerMap.theBooker.getPosition() + (gamepad1.right_stick_y * 0.001));
+        telemetry.addData("", ZookerMap.theBooker.getPosition());
+        telemetry.update();
     }
 
     @Override

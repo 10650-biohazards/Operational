@@ -2,8 +2,8 @@ package Competition.Programs.Autonomous.Active.Red;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import DubinsCurve.curveProcessor3;
@@ -20,15 +20,16 @@ public class NewRedFoundationWall extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
+        //robot.stopVision();
 
-        Robot.track.setCurrentNode(1, -3, 90);
-        RobotMap.gyro.startAng = 90;
+        Zooker.track.setCurrentNode(1, -3, 90);
+        ZookerMap.gyro.startAng = 90;
 
-        drive = Robot.drive;
-        hooker = Robot.hooker;
+        drive = Zooker.drive;
+        hooker = Zooker.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }
@@ -40,8 +41,10 @@ public class NewRedFoundationWall extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-        drive.moveStraightPID(300);
-        drive.moveStrafeMod(-0.3, 2800);
+        hooker.book();
+        hooker.protect();
+        drive.moveStraightPID(500);
+        drive.moveStrafeMod(-0.3, 5000);
         //drive.moveStrafePow(-1, 500);
         //drive.moveTurnPID(90);
         //drive.moveStrafePow(-0.4, 500);
@@ -54,8 +57,11 @@ public class NewRedFoundationWall extends ExplosiveAuto {
         drive.moveStrafePow(-0.7, 1200);
         hooker.release();
         drive.moveStraightPID(1000, 1000);
-        drive.moveTurnPID(190);
-        drive.moveStrafePow(1, 700);
+        drive.moveStrafePow(0.5, 300);
+        drive.moveTurnPID(85);
+        hooker.book();
+        drive.moveStraightPID(-1200);
+        u.waitMS(30000);
     }
 
     @Override

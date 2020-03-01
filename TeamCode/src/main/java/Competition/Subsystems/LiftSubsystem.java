@@ -3,7 +3,7 @@ package Competition.Subsystems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import Competition.RobotMap;
+import Competition.ZookerMap;
 import FtcExplosivesPackage.BioSubsystem;
 
 public class LiftSubsystem extends BioSubsystem {
@@ -21,8 +21,8 @@ public class LiftSubsystem extends BioSubsystem {
 
     @Override
     public void enable() {
-        lift = RobotMap.lift;
-        rotator = RobotMap.rotator;
+        lift = ZookerMap.lift;
+        rotator = ZookerMap.rotator;
 
         rotTarget = lift.getCurrentPosition();
 

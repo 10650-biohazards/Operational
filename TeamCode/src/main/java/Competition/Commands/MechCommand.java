@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.ZookerMap;
+import Competition.Zooker;
 import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardTele;
 import Utilities.PID;
@@ -22,7 +22,7 @@ public class MechCommand extends BioCommand {
 
     String TAG = "MechCommand";
 
-    DcMotor intRight, intLeft, lift, rotator;
+    DcMotor intRight, intLeft, lift, rotator, theDooker;
 
     Servo swinger, gripper, hooker, theCooker, theBookie, leftTransfer, rightTransfer, theRightLooker, theLeftLooker;
 
@@ -36,9 +36,14 @@ public class MechCommand extends BioCommand {
 
     Utility u;
 
+    double mod = 0.3238 - 0.3072;
+
     boolean shuttleFirst, foundFirst;
 
     double lastTriggered = System.currentTimeMillis();
+
+    boolean endGame = false;
+    double lastTime = System.currentTimeMillis();
 
     //ROTATION STUFF
     private final int VERTICAL = 42;
@@ -67,27 +72,28 @@ public class MechCommand extends BioCommand {
 
         liftPID = new PID();
 
-        intRight = RobotMap.intRight;
-        intLeft = RobotMap.intLeft;
+        intRight = ZookerMap.intRight;
+        intLeft = ZookerMap.intLeft;
+        theDooker = ZookerMap.theDooker;
 
-        swinger = RobotMap.swinger;
-        gripper = RobotMap.gripper;
-        hooker = RobotMap.hooker;
-        theCooker = RobotMap.theCooker;
-        theBookie = RobotMap.theBooker;
-        leftTransfer = RobotMap.leftTransfer;
-        rightTransfer = RobotMap.rightTransfer;
-        theRightLooker = RobotMap.theRightLooker;
-        theLeftLooker = RobotMap.theLooker;
+        swinger = ZookerMap.swinger;
+        gripper = ZookerMap.gripper;
+        hooker = ZookerMap.hooker;
+        theCooker = ZookerMap.theCooker;
+        theBookie = ZookerMap.theBooker;
+        leftTransfer = ZookerMap.leftTransfer;
+        rightTransfer = ZookerMap.rightTransfer;
+        theRightLooker = ZookerMap.theRightLooker;
+        theLeftLooker = ZookerMap.theLooker;
 
-        RobotMap.skyGrabber.setPosition(0.2);
-        RobotMap.theBooker.setPosition(0.3472);
+        ZookerMap.skyGrabber.setPosition(0.2);
+        ZookerMap.theBooker.setPosition(0.42 + mod);
 
-        //lift = RobotMap.lift;
-        rotator = RobotMap.rotator;
+        //lift = ZookerMap.lift;
+        rotator = ZookerMap.rotator;
 
-        manip = Robot.manipulator;
-        driver = Robot.driver;
+        manip = Zooker.manipulator;
+        driver = Zooker.driver;
 
         sound = new Soundboard(this.hw);
 
@@ -100,35 +106,18 @@ public class MechCommand extends BioCommand {
 
     @Override
     public void start() {
-
         intLeft.setPower(0);
         intRight.setPower(0);
 
         startTime = System.currentTimeMillis();
-
     }
 
     @Override
     public void loop() {
-        //cairrage();
         hooker();
-        //manualTransfer();
-
-        if (manip.a) {
-            rigInEm();
-            intake();
-        } else {
-            intake();
-            rigInEm();
-        }
-
-        //adjTargLevel();
-        //moveLift();
-        //updateLift();
-
-        //moveRotation();
-        //updateRotation();
-
+        dooker();
+        rigInEm();
+        intake();
         cookInEm();
     }
 
@@ -140,11 +129,39 @@ public class MechCommand extends BioCommand {
         }
     }
 
-    private void rigInEm() {
-        if ((manip.right_stick_y < -0.05 || VisionCommand.stoneY > IntakePipeline.slowThresh) && VisionCommand.stoneY > 90) {
-            theBookie.setPosition(0.2027);
+    private void dooker() {
+        if (manip.left_stick_y > 0.05 && theDooker.getCurrentPosition() > 50) {
+            theDooker.setPower(-manip.left_stick_y);
+        } else if (manip.left_stick_y < 0.05 && theDooker.getCurrentPosition() < 11000) {
+            theDooker.setPower(-manip.left_stick_y);
         } else {
-            theBookie.setPosition(0.3472);
+            theDooker.setPower(0);
+        }
+        op.telemetry.addData("Yes", theDooker.getCurrentPosition());
+        op.telemetry.update();
+    }
+
+    private void rigInEm() {
+
+        if (manip.b) {
+            theBookie.setPosition(0.42 + mod);
+        } else {
+            if (manip.x && lastTime + 1000 < System.currentTimeMillis()) {
+                endGame = !endGame;
+                lastTime = System.currentTimeMillis();
+            }
+
+            if (!endGame) {
+                if ((manip.right_stick_y < -0.05 || VisionCommand.stoneY > IntakePipeline.slowThresh) && VisionCommand.stoneY > 90) {
+                    theBookie.setPosition(0.2027 + mod);
+                } else if (manip.right_stick_y < -0.05) {
+                    theBookie.setPosition(0.3472 + mod);
+                } else {
+                    theBookie.setPosition(0.2972 + mod);
+                }
+            } else {
+                theBookie.setPosition(0.42 + mod);
+            }
         }
     }
 
@@ -155,7 +172,7 @@ public class MechCommand extends BioCommand {
             theLeftLooker.setPosition(0);
         }
 
-        if (manip.right_stick_y > 0.05) {
+        if (manip.right_stick_y > 0.05 || driver.right_trigger > 0.05) {
             IntakePipeline.minY = 140;
             //STOOPID ONE
             if (VisionCommand.intakeStatus == VisionCommand.stoneStatus.ONTARGET) {
@@ -180,13 +197,13 @@ public class MechCommand extends BioCommand {
         } else if (manip.right_stick_y < -0.05) {
             intLeft.setPower(-1);
             intRight.setPower(-1);
-        } else if (manip.a) {
+        } else if (manip.a || driver.right_bumper) {
             if (VisionCommand.stoneY > IntakePipeline.slowThresh) {
                 intLeft.setPower(-0.6);
                 intRight.setPower(-0.6);
             } else {
-                intLeft.setPower(-0.3);
-                intRight.setPower(-0.3);
+                intLeft.setPower(-0.6);
+                intRight.setPower(-0.6);
             }
         } else {
             shuttleFirst = true;
@@ -232,10 +249,19 @@ public class MechCommand extends BioCommand {
 
     public void hooker() {
 
-            hooker.setPosition(-0.55 * manip.left_trigger + 1);
+        if (manip.left_trigger > 0.55) {
+            hooker.setPosition(0.45);
+        } else if (manip.left_trigger > 0.05) {
+            hooker.setPosition(0.58);
+        } else {
+            hooker.setPosition(1.0);
+        }
 
-            //op.telemetry.addData("hooker", hooker.getPosition());
-            //op.telemetry.update();
+
+        op.telemetry.addData("YOOV", hooker.getPosition());
+
+        //op.telemetry.addData("hooker", hooker.getPosition());
+        //op.telemetry.update();
     }
 
     public void adjTargLevel() {
@@ -337,6 +363,6 @@ public class MechCommand extends BioCommand {
 
     @Override
     public void stop() {
-
+        theDooker.setPower(0);
     }
 }

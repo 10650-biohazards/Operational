@@ -1,18 +1,9 @@
 package Competition.Programs.Autonomous.Active.Blue;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.slf4j.helpers.Util;
-
-import Competition.Robot;
-import Competition.RobotMap;
-import Competition.Subsystems.DriveSubsystem;
-import Competition.Subsystems.HookSubsystem;
-import DubinsCurve.curveProcessor3;
 import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.Utility;
 
-@Autonomous (name = "New Blue Foundation STOP | Bridge Park", group = "blue")
+//@Autonomous (name = "New Blue Foundation STOP | Bridge Park", group = "blue")
 public class NewBlueFoundationBridgeSTOP extends ExplosiveAuto {
 
     int secs = 0;

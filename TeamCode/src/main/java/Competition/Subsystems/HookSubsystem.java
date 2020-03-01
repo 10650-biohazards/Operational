@@ -3,8 +3,7 @@ package Competition.Subsystems;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.ZookerMap;
 import FtcExplosivesPackage.Subsystem;
 
 public class HookSubsystem extends Subsystem {
@@ -18,14 +17,29 @@ public class HookSubsystem extends Subsystem {
 
     @Override
     public void enable() {
-        hooker = RobotMap.hooker;
-        skyGrabber = RobotMap.skyGrabber;
-        RobotMap.theBooker.setPosition(0.3472);
+        hooker = ZookerMap.hooker;
+        skyGrabber = ZookerMap.skyGrabber;
     }
 
     @Override
     public void disable() {
 
+    }
+
+    public void book() {
+        ZookerMap.theBooker.setPosition(0.2972);
+    }
+
+    public void protect() {
+        ZookerMap.theBooker.setPosition(0.42);
+    }
+
+    public void prepare() {
+        ZookerMap.hooker.setPosition(0.58);
+    }
+
+    public void prepare2() {
+        ZookerMap.hooker.setPosition(0.62);
     }
 
     public void hook() {

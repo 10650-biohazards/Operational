@@ -3,8 +3,8 @@ package Competition.Programs.Autonomous.Legacy.Red;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import DubinsCurve.curveProcessor3;
@@ -23,16 +23,16 @@ public class RedFoundationWall extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(1, -3, 90);
-        RobotMap.gyro.startAng = 90;
+        Zooker.track.setCurrentNode(1, -3, 90);
+        ZookerMap.gyro.startAng = 90;
 
-        drive = Robot.drive;
-        //vision = Robot.vision;
-        hooker = Robot.hooker;
+        drive = Zooker.drive;
+        //vision = Zooker.vision;
+        hooker = Zooker.hooker;
 
         curve = new curveProcessor3(drive, telemetry, this);
     }

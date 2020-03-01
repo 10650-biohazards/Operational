@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Soundboard;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import Competition.Subsystems.IntakeSubsystem;
@@ -34,17 +34,17 @@ public class NewestBlueSkystoneBridge extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(-1.5, -2.625, 0);
-        RobotMap.gyro.startAng = 0;
+        Zooker.track.setCurrentNode(-1.5, -2.625, 0);
+        ZookerMap.gyro.startAng = 0;
 
-        drive = Robot.drive;
-        vision = Robot.vision;
-        hook = Robot.hooker;
-        intake = Robot.intake;
+        drive = Zooker.drive;
+        vision = Zooker.vision;
+        hook = Zooker.hooker;
+        intake = Zooker.intake;
 
         sound = new Soundboard(this.hardwareMap);
 
@@ -116,7 +116,7 @@ public class NewestBlueSkystoneBridge extends ExplosiveAuto {
             //drive.moveStraightPID(100);
             drive.moveStrafePow(-0.5, 500);
             hook.grabSkystone();
-            telemetry.addData("YEET", RobotMap.skyGrabber.getPosition());
+            telemetry.addData("YEET", ZookerMap.skyGrabber.getPosition());
             telemetry.update();
             u.waitMS(500);
             drive.moveStrafePow(0.5, 1000);
@@ -129,6 +129,7 @@ public class NewestBlueSkystoneBridge extends ExplosiveAuto {
         }
 
         drive.moveStrafePow(-0.4, 1000);
+        u.waitMS(30000);
     }
 
     public void DOTHETHING(boolean moveRight, double targAng) {

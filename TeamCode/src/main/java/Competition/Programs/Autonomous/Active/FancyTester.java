@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Soundboard;
 
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import Competition.Subsystems.DriveSubsystem;
 import Competition.Subsystems.HookSubsystem;
 import Competition.Subsystems.IntakeSubsystem;
@@ -16,8 +16,7 @@ import FtcExplosivesPackage.ExplosiveAuto;
 import Utilities.PID;
 import Utilities.Utility;
 
-@Autonomous(name = "Skystone tester", group = "blue")
-@Disabled
+@Autonomous(name = "no", group = "")
 public class FancyTester extends ExplosiveAuto {
 
     DriveSubsystem drive;
@@ -33,17 +32,17 @@ public class FancyTester extends ExplosiveAuto {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this);
         robot.enable();
 
-        Robot.track.setCurrentNode(-1.5, -2.625, 0);
-        RobotMap.gyro.startAng = 0;
+        Zooker.track.setCurrentNode(-1.5, -2.625, 0);
+        ZookerMap.gyro.startAng = 0;
 
-        drive = Robot.drive;
-        vision = Robot.vision;
-        hook = Robot.hooker;
-        intake = Robot.intake;
+        drive = Zooker.drive;
+        vision = Zooker.vision;
+        hook = Zooker.hooker;
+        intake = Zooker.intake;
         sound = new Soundboard(this.hardwareMap);
 
         turnPID.setup(0.03, 0, 0, 0, 0.5, 90);
@@ -55,10 +54,6 @@ public class FancyTester extends ExplosiveAuto {
     @Override
     public void initAction() {
 
-        waitForStart();
-        DOTHETHING();
-        intake.intake();
-        drive.swingTurnPID(115, true);
     }
 
     public void DOTHETHING() {
@@ -102,7 +97,12 @@ public class FancyTester extends ExplosiveAuto {
 
     @Override
     public void body() throws InterruptedException {
-
+        drive.moveTurnPID(185, 4000);
+        u.waitMS(5000);
+        drive.moveTurnPID(90, 4000);
+        u.waitMS(5000);
+        drive.moveTurnPID(115, 4000);
+        u.waitMS(5000);
     }
 
     @Override

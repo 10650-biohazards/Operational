@@ -1,15 +1,11 @@
 package Competition.Commands;
 
-import android.media.MediaPlayer;
-import com.qualcomm.ftcrobotcontroller.R;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import Competition.Robot;
-import Competition.RobotMap;
-import Competition.Subsystems.DriveSubsystem;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardNavX;
 import FtcExplosivesPackage.BiohazardTele;
@@ -28,11 +24,14 @@ public class DriveCommand extends BioCommand {
     Utility u;
 
     PID turnPID = new PID();
+    PID stayPID = new PID();
 
     boolean first = true;
     boolean disabled = false;
 
     double startTime;
+    StayState stayState = StayState.DISABLED;
+    double lastTime = System.currentTimeMillis();
 
     HardwareMap hw;
 
@@ -49,9 +48,10 @@ public class DriveCommand extends BioCommand {
 
         super(op, "drive");
         u = new Utility(op);
-        Robot robot = new Robot(op);
+        Zooker robot = new Zooker(op);
 
         turnPID.setup(0.05, 0, 0, 0, 0.5, 0);
+        stayPID.setup(0.008, 0, 0, 0.05, 1, 90);
         this.op = op;
 
     }
@@ -60,7 +60,7 @@ public class DriveCommand extends BioCommand {
     //reduces it and the other numbers so the greatest value is equal to one
     public float ScaleAdjustment(float a, float b, float c, float d, float maxValue){
 
-        float largestValue = Math.max(Math.max(Math.abs(a), Math.abs(b)) ,Math.max(Math.abs(c),Math.abs(d)));
+        float largestValue = Math.max(Math.max(Math.abs(a), Math.abs(b)), Math.max(Math.abs(c),Math.abs(d)));
         float adjustment = 0;
         if(largestValue > maxValue){
 
@@ -79,15 +79,15 @@ public class DriveCommand extends BioCommand {
     @Override
     public void init() {
 
-        bright = RobotMap.bright;
-        fright = RobotMap.fright;
-        bleft = RobotMap.bleft;
-        fleft = RobotMap.fleft;
+        bright = ZookerMap.bright;
+        fright = ZookerMap.fright;
+        bleft = ZookerMap.bleft;
+        fleft = ZookerMap.fleft;
 
-        gyro = RobotMap.gyro;
+        gyro = ZookerMap.gyro;
 
-        driver = Robot.driver;
-        manip = Robot.manipulator;
+        driver = Zooker.driver;
+        manip = Zooker.manipulator;
 
     }
 
@@ -106,7 +106,7 @@ public class DriveCommand extends BioCommand {
             if (first) {
 
                 first = false;
-                u.waitMS(100);
+                //u.waitMS(100);
 
             }//autoStack();
 
@@ -138,10 +138,36 @@ public class DriveCommand extends BioCommand {
 
         SlowPower();
 
-        frightPower = +sidePower + straightPower + turnPower;
-        brightPower = -sidePower + straightPower + turnPower;
-        bleftPower = +sidePower + straightPower - turnPower;
-        fleftPower = -sidePower + straightPower - turnPower;
+        float stayPower;
+        if (stayState == StayState.DISABLED) {
+            stayPower = 0;
+        } else {
+            stayPower = (float) stayPID.status(refine(gyro.getYaw()));
+        }
+
+        if (driver.left_bumper && lastTime + 300 < System.currentTimeMillis()) {
+            if (stayState == StayState.SHUTTLING) {
+                stayState = StayState.INTAKING;
+                stayPID.setTarget(90);
+            } else if (stayState == StayState.INTAKING) {
+                stayState = StayState.SHUTTLING;
+                stayPID.setTarget(180);
+            } else {
+                stayState = StayState.DISABLED;
+            }
+            lastTime = System.currentTimeMillis();
+        }
+        /*if (driver.right_bumper && lastTime + 300 < System.currentTimeMillis()) {
+            stayState = stayState == StayState.DISABLED ? StayState.INTAKING : StayState.DISABLED;
+            stayPID.setTarget(90);
+            lastTime = System.currentTimeMillis();
+        }*/
+
+
+        frightPower = +sidePower + straightPower + turnPower - stayPower;
+        brightPower = -sidePower + straightPower + turnPower - stayPower;
+        bleftPower = +sidePower + straightPower - turnPower + stayPower;
+        fleftPower = -sidePower + straightPower - turnPower + stayPower;
 
         //finds the greatest number than finds the scale factor to make that equal to one.
 
@@ -165,13 +191,13 @@ public class DriveCommand extends BioCommand {
 
             } else {
 
-                setPows(0,0,0,0);
+                setPows(-stayPower,-stayPower,stayPower,stayPower);
 
             }
         }
 
-        /*op.telemetry.addData("left  y", Robot.driver.left_stick_y);
-        op.telemetry.addData("right x", Robot.driver.right_stick_x);
+        /*op.telemetry.addData("left  y", Zooker.driver.left_stick_y);
+        op.telemetry.addData("right x", Zooker.driver.right_stick_x);
         op.telemetry.addData("Bright", bright.getCurrentPosition());
         op.telemetry.addData("Fright", fright.getCurrentPosition());
         op.telemetry.addData("Bleft", bleft.getCurrentPosition());
@@ -282,5 +308,19 @@ public class DriveCommand extends BioCommand {
 
         setPows(0,0,0,0);
 
+    }
+
+    public double refine(double input) {
+        input %= 360;
+        if (input < 0) {
+            input += 360;
+        }
+        return input;
+    }
+
+    private enum StayState {
+        DISABLED,
+        INTAKING,
+        SHUTTLING
     }
 }

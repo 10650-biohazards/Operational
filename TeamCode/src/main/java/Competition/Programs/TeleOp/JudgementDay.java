@@ -8,8 +8,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import Competition.Commands.DriveCommand;
-import Competition.Robot;
-import Competition.RobotMap;
+import Competition.Zooker;
+import Competition.ZookerMap;
 import FtcExplosivesPackage.BiohazardTele;
 import VisionPipelines.JudgementPipeline;
 
@@ -21,8 +21,8 @@ public class JudgementDay extends BiohazardTele {
 
     @Override
     public void initHardware() {
-        RobotMap robotMap = new RobotMap(hardwareMap);
-        Robot robot = new Robot(this, true);
+        ZookerMap robotMap = new ZookerMap(hardwareMap);
+        Zooker robot = new Zooker(this, true);
 
         drive = new DriveCommand(this);
         drive.enable();
