@@ -14,6 +14,8 @@ import FtcExplosivesPackage.BioCommand;
 import FtcExplosivesPackage.BiohazardNavX;
 import FtcExplosivesPackage.BiohazardTele;
 import FtcExplosivesPackage.ToxinFieldBasedControl;
+import FtcExplosivesPackage.CompleteController;
+import FtcExplosivesPackage.Utilities;
 import Utilities.PID;
 import Utilities.Utility;
 
@@ -23,6 +25,8 @@ public class DriveCommand extends BioCommand {
     private BiohazardNavX gyro;
 
     private Gamepad driver;
+
+    private CompleteController driveController;
 
     Utility u;
 
@@ -86,6 +90,8 @@ public class DriveCommand extends BioCommand {
 
         driver = Robot.driver;
 
+        driveController.SetControllerJoystick(driver, CompleteController.JoystickShape.SQUARE, CompleteController.JoystickDeadzoneShape.CIRCULAR, 0.01);
+
     }
 
     @Override
@@ -142,7 +148,7 @@ public class DriveCommand extends BioCommand {
 
         //finds the greatest number than finds the scale factor to make that equal to one.
 
-        float scaleAdjust = ScaleAdjustment(frightPower, brightPower, bleftPower, fleftPower, 1);
+        float scaleAdjust = Utilities.ScaleAdjustment(1,frightPower,brightPower,bleftPower,fleftPower);
 
         brightPower *= scaleAdjust;
         frightPower *= scaleAdjust;
@@ -222,7 +228,7 @@ public class DriveCommand extends BioCommand {
 
     public void FieldOrientedControl(){
 
-        ToxinFieldBasedControl.Point leftStick = ToxinFieldBasedControl.getLeftJoystick(driver, gyro);
+        Utilities.Point leftStick = ToxinFieldBasedControl.getLeftJoystick(driver, gyro);
         sidePower = -(float) leftStick.x;
         straightPower = -(float) leftStick.y;
         turnPower = -driver.right_stick_x;
@@ -231,10 +237,14 @@ public class DriveCommand extends BioCommand {
 
     public void ObjectOrientedControl(){
 
+        /*
         sidePower = -driver.left_stick_x;
         straightPower = -driver.left_stick_y;
         turnPower = -driver.right_stick_x;
-
+        */
+        sidePower = -(float) driveController.lx();
+        straightPower = -(float) driveController.ly();
+        turnPower = -(float) driveController.rx();
     }
 
     public void SlowPower(){
