@@ -90,7 +90,7 @@ public class DriveCommand extends BioCommand {
 
         driver = Robot.driver;
 
-        driveController.SetControllerJoystick(driver, CompleteController.JoystickShape.SQUARE, CompleteController.JoystickDeadzoneShape.CIRCULAR, 0.01);
+        driveController.SetControllerJoystick(driver, CompleteController.JoystickShape.SQUARE, CompleteController.JoystickDeadzoneShape.CIRCULAR, 0.01,false,false);
 
     }
 

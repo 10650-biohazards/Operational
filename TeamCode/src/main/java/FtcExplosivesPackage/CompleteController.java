@@ -16,6 +16,8 @@ public class CompleteController {
     JoystickShape js;
     private double TD;
     private boolean RT;
+    private boolean reverseX;
+    private boolean reverseY;
     public double JoystickDeadzoneMag;
 
     public enum JoystickDeadzoneShape{
@@ -28,13 +30,13 @@ public class CompleteController {
         SQUARE
     }
 
-    public void SetControllerJoystick (Gamepad gamepad, JoystickShape js, JoystickDeadzoneShape ds, double JDM){
+    public void SetControllerJoystick (Gamepad gamepad, JoystickShape js, JoystickDeadzoneShape ds, double JDM, boolean reverseX, boolean reverseY){
         this.gamepad = gamepad;
         this.ds = ds;
         this.js = js;
         this.JoystickDeadzoneMag = JDM;
-
-
+        this.reverseX = reverseX;
+        this.reverseY = reverseY;
     }
 
     public void SetControllerTrigger (Gamepad gamepad, double TriggerDeadzone, boolean ReverseTrigger){
@@ -125,6 +127,8 @@ public class CompleteController {
         double XY[] = {0,0};
         boolean OutsideJoystickDeadzone = false;
         double JDM = this.JoystickDeadzoneMag;
+        if(reverseX) X=-X;
+        if(reverseY) Y=-Y;
         switch(this.ds){
             case CIRCULAR:  if (JDM > Utilities.Distance(X,Y,0,0)){
                                 OutsideJoystickDeadzone = false;
