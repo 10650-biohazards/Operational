@@ -24,6 +24,7 @@ public class HookSubsystem extends Subsystem {
 
     }
 
+
     public void hook() {
         hooker.setPosition(0.5);
     }

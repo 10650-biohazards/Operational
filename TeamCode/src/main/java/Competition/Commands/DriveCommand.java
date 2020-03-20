@@ -58,24 +58,7 @@ public class DriveCommand extends BioCommand {
 
     }
 
-    //finds the biggest number that is greater than one and proportionally
-    //reduces it and the other numbers so the greatest value is equal to one
-    public float ScaleAdjustment(float a, float b, float c, float d, float maxValue){
 
-        float largestValue = Math.max(Math.max(Math.abs(a), Math.abs(b)) ,Math.max(Math.abs(c),Math.abs(d)));
-        float adjustment = 0;
-        if(largestValue > maxValue){
-
-            adjustment = maxValue/largestValue;
-
-        } else {
-
-            adjustment = 1;
-
-        }
-        return adjustment;
-
-    }
 
 
     @Override

@@ -7,6 +7,7 @@ public class Utilities {
         NEGATIVE
     }
 
+
     public static class Point{
         public double x;
         public double y;
@@ -21,53 +22,41 @@ public class Utilities {
 
     }
 
-    public static class multiReturn{
-
-        public double return1;
-        public double return2;
-        public double return3;
-        public double return4;
-        public double return5;
-        public double return6;
-
-        public multiReturn (double... Return){
-            int i;
-
-            for (i = 0; i < Return.length; i++){
-                if (i == 0){
-                    return1 = Return[i];
-                } else if (i == 1){
-                    return2 = Return[i];
-                } else if (i == 2){
-                    return3 = Return[i];
-                } else if (i == 3){
-                    return4 = Return[i];
-                } else if (i == 4){
-                    return5 = Return[i];
-                } else if (i == 5) {
-                    return6 = Return[i];
-                }
-            }
-        }
-    }
-
     public static double getSign (double val){
         return val/Math.abs(val);
     }
 
-    public static float ScaleAdjustment(float maxValue, float... val){
+    public static double CompleteScaleAdjust(double fitValue, double... val){
+        //makes the highest value always equal 1 while proportionally moving the others
 
-        float largestValue = 0;
-        float adjustment;
+        double largestValue = 0;
+        double adjustment;
 
         for(int i = 0; i <= val.length; i++){
             largestValue = Math.max(Math.abs(val[i]),largestValue);
         }
-        if(largestValue > maxValue){
-            adjustment = maxValue/largestValue;
-        } else {
-            adjustment = 1;
+
+        adjustment = fitValue/largestValue;
+
+        return adjustment;
+    }
+
+
+
+
+    public static double ScaleAdjustment(double maxValue, double... val){
+    //finds the biggest number that is greater than one and proportionally
+    //reduces it and the other numbers so the greatest value is equal to one
+
+        double largestValue = 0;
+        double adjustment;
+
+        for(int i = 0; i <= val.length; i++){
+            largestValue = Math.max(Math.abs(val[i]),largestValue);
         }
+
+        adjustment = largestValue > maxValue ? maxValue/largestValue : 1;
+
         return adjustment;
     }
 
@@ -82,22 +71,29 @@ public class Utilities {
         return new Utilities.Point(point.x * cos - point.y * sin,point.x * sin + point.y * cos);
     }
 
-    public static multiReturn quadSolve(double coefficientA, double coefficientB, double coefficientC){
+    public static double[] quadSolve(double coefficientA, double coefficientB, double coefficientC){
         double A = coefficientA;
         double B = coefficientB;
         double C = coefficientC;
         double answer1 = 0;
         double answer2 = 0;
         double imaginary = Math.sqrt(-1);
+        double[] zeros = {Math.sqrt(-1),Math.sqrt(-1)};
 
         if (Math.pow(B,2)-4*A*C < 0){
-            return new Utilities.multiReturn(imaginary,imaginary);
+            return zeros;
         } else {
             answer1 = (-1*B+Math.sqrt(Math.pow(B,2)-4*A*C))/2*A;
             answer2 = (-1*B-Math.sqrt(Math.pow(B,2)-4*A*C))/2*A;
-            return new Utilities.multiReturn(answer1,answer2);
+            zeros[0] = answer1;
+            zeros[1] = answer2;
+            return zeros;
         }
+
+
+
     }
+
 
     public static double quadEval(double x, double coefficientA, double coefficientB, double coefficientC){
         return coefficientA*(Math.pow(x,2))+coefficientB*x+coefficientC;
@@ -136,5 +132,13 @@ public class Utilities {
     public static double exponentialEval(double x, double h, double k, double a, double b){
         double y = a*Math.pow(b,(x-h))+k;
         return y;
+    }
+
+    public static double findMax(double... inputs){
+        double largestValue = 0;
+        for(int i = 0; i <= inputs.length; i++){
+            largestValue = Math.max(Math.abs(inputs[i]),largestValue);
+        }
+        return largestValue;
     }
 }
